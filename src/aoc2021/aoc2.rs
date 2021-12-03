@@ -1,6 +1,5 @@
 use aoc_runner_derive::{aoc, aoc_generator};
 use std::str::FromStr;
-use itertools::Itertools;
 
 pub enum Direction {
     UP(u32),
