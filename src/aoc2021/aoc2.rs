@@ -24,7 +24,7 @@ pub fn input_generator(input: &str) -> Vec<Direction> {
         }).collect()
 }
 #[aoc(day2, part1)]
-pub fn solve_part1(input: &Vec<Direction>) -> u32 {
+pub fn solve_part1(input: &[Direction]) -> u32 {
     let mut x = 0;
     let mut y = 0;
     for dir in input {
@@ -38,7 +38,7 @@ pub fn solve_part1(input: &Vec<Direction>) -> u32 {
 }
 
 #[aoc(day2, part2)]
-pub fn solve_part2(input: &Vec<Direction>) -> u32 {
+pub fn solve_part2(input: &[Direction]) -> u32 {
     let mut x = 0;
     let mut y = 0;
     let mut aim = 0;

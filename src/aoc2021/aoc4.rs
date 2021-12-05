@@ -89,7 +89,7 @@ pub fn solve_part1(input: &(Vec<u32>, Vec<BingoBoard>)) -> u32 {
     for i in input.0.iter() {
         for b in boards.iter_mut() {
             b.set(*i);
-            if let Some(nums) = b.check() {
+            if let Some(_nums) = b.check() {
                 return b.sum() * i;
             }
         }
@@ -98,6 +98,7 @@ pub fn solve_part1(input: &(Vec<u32>, Vec<BingoBoard>)) -> u32 {
 }
 
 #[aoc(day4, part2)]
+#[allow(clippy::unnecessary_filter_map)]
 pub fn solve_part2(input: &(Vec<u32>, Vec<BingoBoard>)) -> u32 {
     let mut boards = input.1.clone();
     let mut last_board = None;

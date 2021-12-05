@@ -8,19 +8,19 @@ pub fn input_generator(input: &str) -> Vec<u32> {
 const NUM: usize = 12;
 
 #[aoc(day3, part1)]
-pub fn solve_part1(input: &Vec<u32>) -> u32 {
+pub fn solve_part1(input: &[u32]) -> u32 {
     let gamma = gamma(input);
     gamma * epsilon(gamma)
 }
 
 #[aoc(day3, part2)]
-pub fn solve_part2(input: &Vec<u32>) -> u32 {
+pub fn solve_part2(input: &[u32]) -> u32 {
     let co2 = filter_vec(input, false);
     let o2 = filter_vec(input, true);
     co2 * o2
 }
-fn filter_vec(input: &Vec<u32>, invers: bool) -> u32 {
-    let mut v = input.clone();
+fn filter_vec(input: &[u32], invers: bool) -> u32 {
+    let mut v = input.to_owned();
     for i in (0..NUM).rev() {
         let mut t = most_common(&v, i);
         if invers {t = invert(t, NUM)}
@@ -32,7 +32,7 @@ fn filter_vec(input: &Vec<u32>, invers: bool) -> u32 {
     }
     0
 }
-fn gamma(input: &Vec<u32>) -> u32 {
+fn gamma(input: &[u32]) -> u32 {
     let mut n = 0;
     for i in (0..NUM).rev() {
         n += most_common(input, i);
@@ -45,10 +45,10 @@ fn epsilon(input: u32) -> u32 {
 
 fn invert(n: u32, positions: usize) -> u32 {
     let mut m = !n << (32 - positions);
-    m = m >> (32 - positions);
+    m >>= 32 - positions;
     m
 }
-fn most_common(v: &Vec<u32>, pos: usize) -> u32 {
+fn most_common(v: &[u32], pos: usize) -> u32 {
     let mut c = 0;
     let t = 1 << pos;
     for i in v {

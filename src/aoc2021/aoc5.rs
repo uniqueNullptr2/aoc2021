@@ -1,6 +1,5 @@
 use std::collections::BTreeMap;
 use std::collections::HashMap;
-use std::fmt::Display;
 use aoc_runner_derive::{aoc, aoc_generator};
 use std::str::FromStr;
 
@@ -114,7 +113,7 @@ pub fn input_generator(input: &str) -> Vec<(usize,usize,usize,usize)> {
 }
 
 #[aoc(day5, part1)]
-pub fn solve_part1(input: &Vec<(usize,usize,usize,usize)>) -> usize {
+pub fn solve_part1(input: &[(usize,usize,usize,usize)]) -> usize {
     let mut map = HashMap::new();
     for line in input {
         if line.0 == line.2 || line.1 == line.3 {
@@ -125,30 +124,30 @@ pub fn solve_part1(input: &Vec<(usize,usize,usize,usize)>) -> usize {
 }
 
 #[aoc(day5, part2, map)]
-pub fn solve_part2_map(input: &Vec<(usize,usize,usize,usize)>) -> usize {
+pub fn solve_part2_map(input: &[(usize,usize,usize,usize)]) -> usize {
     let mut map = HashMap::new();
     solve(input, &mut map)
 }
 
 #[aoc(day5, part2, vec)]
-pub fn solve_part2_vec(input: &Vec<(usize,usize,usize,usize)>) -> usize {
+pub fn solve_part2_vec(input: &[(usize,usize,usize,usize)]) -> usize {
     let mut map = vec!();
     solve(input, &mut map)
 }
 
 #[aoc(day5, part2, arr)]
-pub fn solve_part2_arr(input: &Vec<(usize,usize,usize,usize)>) -> usize {
+pub fn solve_part2_arr(input: &[(usize,usize,usize,usize)]) -> usize {
     let mut map = [[0usize;1000];1000];
     solve(input, &mut map)
 }
 
 #[aoc(day5, part2, btree)]
-pub fn solve_part2_btree(input: &Vec<(usize,usize,usize,usize)>) -> usize {
+pub fn solve_part2_btree(input: &[(usize,usize,usize,usize)]) -> usize {
     let mut map = [[0usize;1000];1000];
     solve(input, &mut map)
 }
 
-fn solve<T: LineMap> (input: &Vec<(usize,usize,usize,usize)>, map: &mut T) -> usize {
+fn solve<T: LineMap> (input: &[(usize,usize,usize,usize)], map: &mut T) -> usize {
     for line in input {
         if line.0 == line.2 || line.1 == line.3 {
             map.add_line(line.0, line.1, line.2, line.3)
