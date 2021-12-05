@@ -1,15 +1,11 @@
+use std::collections::BTreeMap;
+use std::collections::HashMap;
 use std::fmt::Display;
 use aoc_runner_derive::{aoc, aoc_generator};
 use std::str::FromStr;
 
-pub struct LineMap{
-    map: Vec<Vec<u32>>
-}
-impl LineMap {
-    pub fn new(width: usize, height: usize) -> Self {
-        Self{map: vec!(vec!(0u32; width); height)}
-    }
-    pub fn add_line (&mut self, x1: usize, y1: usize, x2: usize, y2: usize) {
+pub trait LineMap {
+    fn add_line (&mut self, x1: usize, y1: usize, x2: usize, y2: usize) {
         let xs = usize::min(x1, x2);
         let xe = usize::max(x1, x2);
         let ys = usize::min(y1, y2);
@@ -20,7 +16,7 @@ impl LineMap {
             }
         }
     }
-    pub fn add_diagonal (&mut self, x1: usize, y1: usize, x2: usize, y2: usize) {
+    fn add_diagonal (&mut self, x1: usize, y1: usize, x2: usize, y2: usize) {
         let xd = if x1 < x2 {1} else {-1};
         let yd = if y1 < y2 {1} else {-1};
         let mut x: i32 = x1 as i32;
@@ -35,26 +31,29 @@ impl LineMap {
             y += yd;
         }
     }
-
+    fn add_point(&mut self, x: usize, y: usize);
+    fn count(&self) -> usize;
+}
+impl LineMap for Vec<Vec<usize>>{
     fn add_point(&mut self, x: usize, y: usize) {
         loop {
-            if y < self.map.len() {
+            if y < self.len() {
                 break;
             }
-            self.map.push(vec!());
+            self.push(vec!());
         }
-        let line = &mut self.map[y];
+        let line = &mut self[y];
         loop {
             if x < line.len() {
                 break;
             }
             line.push(0);
         }
-        self.map[y][x] += 1;
+        self[y][x] += 1;
     }
-    pub fn count(&self) -> usize {
+    fn count(&self) -> usize {
         let mut c = 0;
-            for l in &self.map {
+            for l in self {
                 for p in l {
                     if p >= &2 {
                         c += 1;
@@ -64,15 +63,39 @@ impl LineMap {
         c
     }
 }
+impl LineMap for HashMap<(usize,usize), usize> {
+    fn add_point(&mut self, x: usize, y: usize) {
+        *self.entry((x,y)).or_insert(0) += 1;
+    }
+    fn count(&self) -> usize {
+        self.iter().filter(|(_,e)| **e >= 2).count()
+    }
+}
 
-impl Display for LineMap {
-fn fmt(&self, fmt: &mut std::fmt::Formatter<'_>) -> std::result::Result<(), std::fmt::Error> {
-    let v : Vec<String> =self.map.iter()
-            .map(|l| l.iter().map(|n| if n == &0 {".".to_owned()} else {n.to_string()}).collect::<String>()).collect();
-    write!(fmt, "{}", v.join("\n"));
-    Ok(())
+impl LineMap for BTreeMap<(usize,usize), usize> {
+    fn add_point(&mut self, x: usize, y: usize) {
+        *self.entry((x,y)).or_insert(0) += 1;
+    }
+    fn count(&self) -> usize {
+        self.iter().filter(|(_,e)| **e >= 2).count()
+    }
 }
+impl LineMap for [[usize;1000]; 1000] {
+    fn add_point(&mut self, x: usize, y: usize) {
+        self[y][x] += 1;
+    }
+    fn count(&self) -> usize {
+        self.iter().map(|l| l.iter().filter(|i| **i >= 2).count()).sum()
+    }
 }
+// impl Display for LineMap {
+//     fn fmt(&self, fmt: &mut std::fmt::Formatter<'_>) -> std::result::Result<(), std::fmt::Error> {
+//         let v : Vec<String> =self.map.iter()
+//                 .map(|l| l.iter().map(|n| if n == &0 {".".to_owned()} else {n.to_string()}).collect::<String>()).collect();
+//         write!(fmt, "{}", v.join("\n"));
+//         Ok(())
+//     }
+// }
 #[aoc_generator(day5)]
 pub fn input_generator(input: &str) -> Vec<(usize,usize,usize,usize)> {
     let v = input
@@ -92,7 +115,7 @@ pub fn input_generator(input: &str) -> Vec<(usize,usize,usize,usize)> {
 
 #[aoc(day5, part1)]
 pub fn solve_part1(input: &Vec<(usize,usize,usize,usize)>) -> usize {
-    let mut map = LineMap::new(10, 10);
+    let mut map = HashMap::new();
     for line in input {
         if line.0 == line.2 || line.1 == line.3 {
             map.add_line(line.0, line.1, line.2, line.3)
@@ -101,9 +124,31 @@ pub fn solve_part1(input: &Vec<(usize,usize,usize,usize)>) -> usize {
     map.count()
 }
 
-#[aoc(day5, part2)]
-pub fn solve_part2(input: &Vec<(usize,usize,usize,usize)>) -> usize {
-    let mut map = LineMap::new(10, 10);
+#[aoc(day5, part2, map)]
+pub fn solve_part2_map(input: &Vec<(usize,usize,usize,usize)>) -> usize {
+    let mut map = HashMap::new();
+    solve(input, &mut map)
+}
+
+#[aoc(day5, part2, vec)]
+pub fn solve_part2_vec(input: &Vec<(usize,usize,usize,usize)>) -> usize {
+    let mut map = vec!();
+    solve(input, &mut map)
+}
+
+#[aoc(day5, part2, arr)]
+pub fn solve_part2_arr(input: &Vec<(usize,usize,usize,usize)>) -> usize {
+    let mut map = [[0usize;1000];1000];
+    solve(input, &mut map)
+}
+
+#[aoc(day5, part2, btree)]
+pub fn solve_part2_btree(input: &Vec<(usize,usize,usize,usize)>) -> usize {
+    let mut map = [[0usize;1000];1000];
+    solve(input, &mut map)
+}
+
+fn solve<T: LineMap> (input: &Vec<(usize,usize,usize,usize)>, map: &mut T) -> usize {
     for line in input {
         if line.0 == line.2 || line.1 == line.3 {
             map.add_line(line.0, line.1, line.2, line.3)
