@@ -1,26 +1,23 @@
-use aoc_runner_derive::{aoc, aoc_generator};
 use std::str::FromStr;
 use std::collections::VecDeque;
 
 
-pub fn generator_6(input: &str) -> VecDeque<usize> {
+pub fn input_generator(input: &str) -> VecDeque<usize> {
     let mut arr = [0usize;9];
-    for n in input.split(',').map(|s| usize::from_str(s).unwrap()) {
+    for n in input.split(',').map(|s| usize::from_str(s.trim()).unwrap()) {
         arr[n] += 1;
     }
     VecDeque::from(arr)
 }
 
-#[aoc(day6, part1)]
-pub fn solve_part1(input: &str) -> usize {
-    let mut vec = generator_6(input);
-    run_days(&mut vec, 80)
+
+pub fn solve_part1(vec: &mut VecDeque<usize>) -> usize {
+    run_days(vec, 80)
 }
 
-#[aoc(day6, part2)]
-pub fn solve_part2(input: &str) -> usize {
-    let mut vec = generator_6(input);
-    run_days(&mut vec, 256)
+
+pub fn solve_part2(vec: &mut VecDeque<usize>) -> usize {
+    run_days(vec, 256)
 }
 
 fn run_day(vec: &mut VecDeque<usize>) {

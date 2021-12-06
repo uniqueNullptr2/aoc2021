@@ -1,5 +1,4 @@
 use std::fmt::Display;
-use aoc_runner_derive::{aoc, aoc_generator};
 use std::str::FromStr;
 
 #[derive(Clone)]
@@ -67,7 +66,6 @@ impl Display for BingoBoard {
     }
 }
 
-#[aoc_generator(day4)]
 pub fn input_generator(input: &str) -> (Vec<u32>, Vec<BingoBoard>) {
     let v: Vec<&str> = input.lines().collect();
     let r = v[0].split(',').map(|e| u32::from_str(e).unwrap()).collect::<Vec<u32>>();
@@ -83,7 +81,7 @@ pub fn input_generator(input: &str) -> (Vec<u32>, Vec<BingoBoard>) {
     }
     (r, boards)
 }
-#[aoc(day4, part1)]
+
 pub fn solve_part1(input: &(Vec<u32>, Vec<BingoBoard>)) -> u32 {
     let mut boards = input.1.clone();
     for i in input.0.iter() {
@@ -97,7 +95,6 @@ pub fn solve_part1(input: &(Vec<u32>, Vec<BingoBoard>)) -> u32 {
     0
 }
 
-#[aoc(day4, part2)]
 #[allow(clippy::unnecessary_filter_map)]
 pub fn solve_part2(input: &(Vec<u32>, Vec<BingoBoard>)) -> u32 {
     let mut boards = input.1.clone();

@@ -1,4 +1,3 @@
-use aoc_runner_derive::{aoc, aoc_generator};
 use std::str::FromStr;
 
 pub enum Direction {
@@ -7,7 +6,7 @@ pub enum Direction {
     FORWARD(u32),
 }
 
-#[aoc_generator(day2)]
+
 pub fn input_generator(input: &str) -> Vec<Direction> {
     input
         .lines()
@@ -23,7 +22,8 @@ pub fn input_generator(input: &str) -> Vec<Direction> {
             }
         }).collect()
 }
-#[aoc(day2, part1)]
+
+
 pub fn solve_part1(input: &[Direction]) -> u32 {
     let mut x = 0;
     let mut y = 0;
@@ -37,7 +37,7 @@ pub fn solve_part1(input: &[Direction]) -> u32 {
     x * y
 }
 
-#[aoc(day2, part2)]
+
 pub fn solve_part2(input: &[Direction]) -> u32 {
     let mut x = 0;
     let mut y = 0;

@@ -9,3 +9,10 @@ edition = "2021"
 aoc-runner="^0.3.0"
 aoc-runner-derive="^0.3.0"
 itertools = "0.10.1"
+
+[dev-dependencies]
+criterion = "^0.3.5"
+
+[[bench]]
+name = "benches"
+harness = false
