@@ -1,5 +1,5 @@
 use std::str::FromStr;
-use std::collections::HashMap;
+
 pub fn input_generator(input: &str) -> (Vec<(usize,usize)>, usize) {
     let v: Vec<usize> = input.split(',').map(|s| usize::from_str(s.trim()).unwrap()).collect();
     let max = *v.iter().max().unwrap();
@@ -27,7 +27,7 @@ pub fn solve_part2(vec: &(Vec<(usize, usize)>, usize)) -> usize {
     let mut l = usize::max_value();
     let e = vec.1;
     for i in 0..=e as usize{
-        let t = solve2(&vec.0, i);
+        let t = solve2(&vec.0, i, e);
         if t < l {
             l = t;
         }
@@ -35,24 +35,20 @@ pub fn solve_part2(vec: &(Vec<(usize, usize)>, usize)) -> usize {
     l
 }
 
-fn solve1(vec: &Vec<(usize,usize)>, pos: usize) -> usize {
+fn solve1(vec: &[(usize,usize)], pos: usize) -> usize {
     vec.iter().map(|(i,n)| i.abs_diff(pos) * n).sum()
 }
 
-fn solve2(vec: &Vec<(usize,usize)>, pos: usize) -> usize {
-    let mut map = HashMap::<usize, usize>::new();
-    vec.iter().map(|(i, n)| fuel(i.abs_diff(pos), &mut map)*n).sum()
+fn solve2(vec: &[(usize,usize)], pos: usize, max: usize) -> usize {
+    let map = fuel(max);
+    vec.iter().map(|(i, n)| map[i.abs_diff(pos)]*n).sum()
 }
-fn fuel(diff: usize, map: &mut HashMap<usize, usize>) -> usize {
-    if map.contains_key(&diff) {
-        *map.get(&diff).unwrap()
-    } else if diff == 1 {
-        1
-    } else if diff == 0 {
-        0
-    } else {
-        let f = fuel(diff-1, map) + diff;
-        map.insert(diff, f);
-        f
+fn fuel(max: usize) -> Vec<usize> {
+    let mut s = 0;
+    let mut v = vec!();
+    for i in 0..=max {
+        s += i;
+        v.push(s);
     }
+    v
 }

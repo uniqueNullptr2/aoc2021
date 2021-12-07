@@ -2,50 +2,50 @@ use std::collections::BTreeMap;
 use std::collections::HashMap;
 use std::str::FromStr;
 
-type UINT = u16;
+type Uint = u16;
 
 pub trait LineMap {
-    fn add_line (&mut self, x1: UINT, y1: UINT, x2: UINT, y2: UINT) {
-        let xs = UINT::min(x1, x2);
-        let xe = UINT::max(x1, x2);
-        let ys = UINT::min(y1, y2);
-        let ye = UINT::max(y1, y2);
+    fn add_line (&mut self, x1: Uint, y1: Uint, x2: Uint, y2: Uint) {
+        let xs = Uint::min(x1, x2);
+        let xe = Uint::max(x1, x2);
+        let ys = Uint::min(y1, y2);
+        let ye = Uint::max(y1, y2);
         for y in ys..=ye {
             for x in xs..=xe {
                 self.add_point(x, y);
             }
         }
     }
-    fn add_diagonal (&mut self, x1: UINT, y1: UINT, x2: UINT, y2: UINT) {
+    fn add_diagonal (&mut self, x1: Uint, y1: Uint, x2: Uint, y2: Uint) {
         let xd = if x1 < x2 {1} else {-1};
         let yd = if y1 < y2 {1} else {-1};
         let mut x: i32 = x1 as i32;
         let mut y: i32 = y1 as i32;
         loop {
             if x == x2 as i32 {
-                self.add_point(x as UINT, y as UINT);
+                self.add_point(x as Uint, y as Uint);
                 break;
             }
-            self.add_point(x as UINT, y as UINT);
+            self.add_point(x as Uint, y as Uint);
             x += xd;
             y += yd;
         }
     }
-    fn add_point(&mut self, x: UINT, y: UINT);
+    fn add_point(&mut self, x: Uint, y: Uint);
     fn count(&self) -> usize;
 }
 
-impl LineMap for Vec<Vec<UINT>>{
-    fn add_point(&mut self, x: UINT, y: UINT) {
+impl LineMap for Vec<Vec<Uint>>{
+    fn add_point(&mut self, x: Uint, y: Uint) {
         loop {
-            if y < self.len() as UINT {
+            if y < self.len() as Uint {
                 break;
             }
             self.push(vec!());
         }
         let line = &mut self[y as usize];
         loop {
-            if x < line.len() as UINT {
+            if x < line.len() as Uint {
                 break;
             }
             line.push(0);
@@ -65,8 +65,8 @@ impl LineMap for Vec<Vec<UINT>>{
     }
 }
 
-impl LineMap for HashMap<(UINT,UINT), u16> {
-    fn add_point(&mut self, x: UINT, y: UINT) {
+impl LineMap for HashMap<(Uint,Uint), u16> {
+    fn add_point(&mut self, x: Uint, y: Uint) {
         *self.entry((x,y)).or_insert(0) += 1;
     }
     fn count(&self) -> usize {
@@ -75,8 +75,8 @@ impl LineMap for HashMap<(UINT,UINT), u16> {
 }
 
 
-impl LineMap for BTreeMap<(UINT,UINT), u16> {
-    fn add_point(&mut self, x: UINT, y: UINT) {
+impl LineMap for BTreeMap<(Uint,Uint), u16> {
+    fn add_point(&mut self, x: Uint, y: Uint) {
         *self.entry((x,y)).or_insert(0) += 1;
     }
     fn count(&self) -> usize {
@@ -85,7 +85,7 @@ impl LineMap for BTreeMap<(UINT,UINT), u16> {
 }
 
 impl LineMap for [[u16;1000]; 1000] {
-    fn add_point(&mut self, x: UINT, y: UINT) {
+    fn add_point(&mut self, x: Uint, y: Uint) {
         self[y as usize][x as usize] += 1;
     }
     fn count(&self) -> usize {
@@ -94,13 +94,13 @@ impl LineMap for [[u16;1000]; 1000] {
 }
 
 
-pub fn input_generator(input: &str) -> Vec<(UINT,UINT,UINT,UINT)> {
+pub fn input_generator(input: &str) -> Vec<(Uint,Uint,Uint,Uint)> {
     let v = input
                 .lines()
                 .map(|l| {
                     let mut nums = l.split(" -> ")
                                 .map(|t| {
-                                    let mut nums = t.split(',').map(|n| UINT::from_str(n).unwrap());
+                                    let mut nums = t.split(',').map(|n| Uint::from_str(n).unwrap());
                                     (nums.next().unwrap(), nums.next().unwrap())
                                 });
                     let n1 = nums.next().unwrap();
@@ -111,7 +111,7 @@ pub fn input_generator(input: &str) -> Vec<(UINT,UINT,UINT,UINT)> {
 }
 
 
-pub fn solve_part1(input: &[(UINT,UINT,UINT,UINT)]) -> usize {
+pub fn solve_part1(input: &[(Uint,Uint,Uint,Uint)]) -> usize {
     let mut map = [[0u16;1000]; 1000];
     for line in input {
         if line.0 == line.2 || line.1 == line.3 {
@@ -122,30 +122,30 @@ pub fn solve_part1(input: &[(UINT,UINT,UINT,UINT)]) -> usize {
 }
 
 
-pub fn solve_part2_map(input: &[(UINT,UINT,UINT,UINT)]) -> usize {
+pub fn solve_part2_map(input: &[(Uint,Uint,Uint,Uint)]) -> usize {
     let mut map = HashMap::new();
     solve(input, &mut map)
 }
 
 
-pub fn solve_part2_vec(input: &[(UINT,UINT,UINT,UINT)]) -> usize {
+pub fn solve_part2_vec(input: &[(Uint,Uint,Uint,Uint)]) -> usize {
     let mut map = vec!();
     solve(input, &mut map)
 }
 
 
-pub fn solve_part2_arr(input: &[(UINT,UINT,UINT,UINT)]) -> usize {
+pub fn solve_part2_arr(input: &[(Uint,Uint,Uint,Uint)]) -> usize {
     let mut map = [[0u16;1000];1000];
     solve(input, &mut map)
 }
 
 
-pub fn solve_part2_btree(input: &[(UINT,UINT,UINT,UINT)]) -> usize {
+pub fn solve_part2_btree(input: &[(Uint,Uint,Uint,Uint)]) -> usize {
     let mut map = BTreeMap::new();
     solve(input, &mut map)
 }
 
-fn solve<T: LineMap> (input: &[(UINT,UINT,UINT,UINT)], map: &mut T) -> usize {
+fn solve<T: LineMap> (input: &[(Uint,Uint,Uint,Uint)], map: &mut T) -> usize {
     for line in input {
         if line.0 == line.2 || line.1 == line.3 {
             map.add_line(line.0, line.1, line.2, line.3)

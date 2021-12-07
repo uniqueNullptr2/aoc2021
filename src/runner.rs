@@ -1,4 +1,4 @@
-use std::{time::{Instant, Duration}, fmt::Display, iter::Inspect};
+use std::{time::{Instant, Duration}, fmt::Display};
 
 
 pub trait AocRunner {
@@ -12,9 +12,9 @@ pub trait AocRunner {
     F2: FnMut(&'_ mut A) -> T
     {
         let s = std::fs::read_to_string("input/2021/day7.txt").unwrap();
-        let ss = s.clone();
+
         if let Some(genf) = gen {
-            let (input, gen_time) = run_generator(ss, genf);
+            let (input, gen_time) = run_generator(s, genf);
             println!("day 1 - generator in {}", gen_time.as_nanos());
 
             let (sol1, solv1_time) = run_solver(&mut input.clone(), fn1);
@@ -38,12 +38,4 @@ fn run_solver<A, T, F: FnMut(A) -> T>(input: A, mut func: F) -> (T, Duration) {
     let now = Instant::now();
     let result = func(input);
     (result, Instant::now()-now)
-}
-
-fn f(r: &usize) {
-
-}
-
-fn r() {
-    f(&mut 0usize)
 }
