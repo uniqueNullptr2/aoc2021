@@ -36,12 +36,12 @@ pub fn solve_part2(vec: &(Vec<(usize, usize)>, usize)) -> usize {
 }
 
 fn solve1(vec: &[(usize,usize)], pos: usize) -> usize {
-    vec.iter().map(|(i,n)| i.abs_diff(pos) * n).sum()
+    vec.iter().map(|(i,n)| diff(*i, pos) * n).sum()
 }
 
 fn solve2(vec: &[(usize,usize)], pos: usize, max: usize) -> usize {
     let map = fuel(max);
-    vec.iter().map(|(i, n)| map[i.abs_diff(pos)]*n).sum()
+    vec.iter().map(|(i, n)| map[diff(*i,pos)]*n).sum()
 }
 fn fuel(max: usize) -> Vec<usize> {
     let mut s = 0;
@@ -51,4 +51,12 @@ fn fuel(max: usize) -> Vec<usize> {
         v.push(s);
     }
     v
+}
+
+fn diff(a: usize, b: usize) -> usize {
+    if a > b {
+        a - b
+    } else {
+        b - a
+    }
 }

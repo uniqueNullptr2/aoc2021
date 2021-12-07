@@ -1,5 +1,5 @@
 use criterion::{Criterion, criterion_group};
-use aoc2021::aoc2021::{aoc1, aoc2, aoc3, aoc4, aoc5, aoc6};
+use aoc2021::aoc2021::{aoc1, aoc2, aoc3, aoc4, aoc5, aoc6, aoc7};
 
 
 
@@ -115,6 +115,22 @@ pub fn day6_solve2(c: &mut Criterion) {
 }
 
 
+pub fn day7_gen(c: &mut Criterion) {
+    let s = std::fs::read_to_string("input/2021/day7.txt").unwrap();
+    c.bench_function("aoc2021_day7_gen",|b| b.iter(|| aoc7::input_generator(&s)));
+}
+pub fn day7_solve1(c: &mut Criterion) {
+    let s1 = std::fs::read_to_string("input/2021/day7.txt").unwrap();
+    let s2 = s1.trim_end_matches("\n");
+    let v = aoc7::input_generator(&s2);
+    c.bench_function("aoc2021_day7_solve1",|b| b.iter_batched(|| v.clone(), |mut v| aoc7::solve_part1(&mut v), criterion::BatchSize::SmallInput));
+}
+pub fn day7_solve2(c: &mut Criterion) {
+    let s1 = std::fs::read_to_string("input/2021/day7.txt").unwrap();
+    let s2 = s1.trim_end_matches("\n");
+    let v = aoc7::input_generator(&s2);
+    c.bench_function("aoc2021_day7_solve2",|b| b.iter_batched(|| v.clone(), |mut v| aoc7::solve_part2(&mut v), criterion::BatchSize::SmallInput));
+}
 
 
 
@@ -124,4 +140,5 @@ criterion_group!( aoc2021,  day1_gen, day1_solve1, day1_solve2,
                             day3_gen, day3_solve1, day3_solve2,
                             day4_gen, day4_solve1, day4_solve2,
                             day5_gen, day5_solve1, day5_solve2_arr, day5_solve2_map, day5_solve2_btree, day5_solve2_vec,
-                            day6_gen, day6_solve1, day6_solve2);
+                            day6_gen, day6_solve1, day6_solve2,
+                            day7_gen, day7_solve1, day7_solve2);
