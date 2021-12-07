@@ -1,5 +1,6 @@
 use std::str::FromStr;
 
+#[derive(Clone, Copy)]
 pub enum Direction {
     UP(u32),
     DOWN(u32),

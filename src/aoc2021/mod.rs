@@ -1,4 +1,4 @@
-use crate::runner::AocRunner;
+use crate::runner::{AocRunner, Parts};
 
 pub mod aoc1;
 pub mod aoc2;
@@ -10,18 +10,71 @@ pub mod aoc7;
 
 pub struct AocRunner2021 {
     day: usize,
-    part: usize,
+    part: Parts,
 }
 
 impl AocRunner2021 {
-    pub fn new (day: usize, part: usize) -> Self {
-        Self{day, part}
+    pub fn new (day: usize) -> Self {
+        Self{day, part: Parts::BOTH}
     }
 }
 impl AocRunner for AocRunner2021 {
+    fn day (&self) -> usize {
+        self.day
+    }
+    fn part(&self) -> Parts {
+        self.part
+    }
     fn run(& self) {
-        self.run_day(Some(|s: String| aoc7::input_generator(&s)),
-                    |input: &mut (Vec<(usize, usize)>, usize)| aoc7::solve_part1(input),
-                    |input: &mut (Vec<(usize,usize)>, usize)| aoc7::solve_part2(input));
+        if let Ok(s) = std::fs::read_to_string(format!("input/2021/day{}.txt", self.day)) {
+            match self.day {
+                1 => {
+                    self.run_day_with_gen(&s,
+                        aoc1::generate_1,
+                        |input| aoc1::solve_part1(input),
+                        |input| aoc1::solve_part2(input));
+                },
+                2 => {
+                    self.run_day_with_gen(&s,
+                        aoc2::input_generator,
+                        |input| aoc2::solve_part1(input),
+                        |input| aoc2::solve_part2(input));
+                },
+                3 => {
+                    self.run_day_with_gen(&s,
+                        aoc3::input_generator,
+                        |input| aoc3::solve_part1(input),
+                        |input| aoc3::solve_part2(input));
+                },
+                4 => {
+                    self.run_day_with_gen(&s,
+                        aoc4::input_generator,
+                        |input| aoc4::solve_part1(input),
+                        |input| aoc4::solve_part2(input));
+                },
+                5 => {
+                    self.run_day_with_gen(&s,
+                        aoc5::input_generator,
+                        |input| aoc5::solve_part1(input),
+                        |input| aoc5::solve_part2_arr(input));
+                },
+                6 => {
+                    self.run_day_mut_with_gen(&s,
+                        aoc6::input_generator,
+                        |input| aoc6::solve_part1(input),
+                        |input| aoc6::solve_part2(input));
+                },
+                7 => {
+                    self.run_day_with_gen(&s,
+                        aoc7::input_generator,
+                        |input| aoc7::solve_part1(input),
+                        |input| aoc7::solve_part2(input));
+                }
+
+                x => println!("Day{} not implemented", x)
+            }
+        } else {
+            println!("Inputfile for Day {} was not found", self.day);
+        }
     }
 }
