@@ -2,11 +2,31 @@ use std::{time::{Instant, Duration}, fmt::Display};
 
 
 pub trait AocRunner {
-    fn run(&self);
+    fn execute(&mut self, day: Option<usize>, part: usize) {
+        let part = match part {
+            1 => Parts::ONE,
+            2 => Parts::TWO,
+            _ => Parts::BOTH
+        };
+        self.set_part(part);
+        let now = Instant::now();
+        if let Some(day) = day {
+            self.set_day(day);
+            self.run();
+        } else {
+            for i in 1..=25 {
+                self.set_day(i);
+                self.run();
+            }
+        }
+        println!("===> {} for everything", (Instant::now() - now).pretty());
+    }
+    fn run(&mut self);
 
     fn day(&self) -> usize;
     fn part(&self) -> Parts;
-
+    fn set_day(&mut self, day: usize);
+    fn set_part(&mut self, part: Parts);
     fn run_day_mut_with_gen<A, G, T, F1, F2>(&self, input: &str, gen: G, fn1: F1, fn2: F2)
     where T: Display,
     G: Fn(&str) -> A,

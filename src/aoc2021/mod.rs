@@ -14,10 +14,11 @@ pub struct AocRunner2021 {
 }
 
 impl AocRunner2021 {
-    pub fn new (day: usize) -> Self {
-        Self{day, part: Parts::BOTH}
+    pub fn new() -> Self {
+        Self{day: 0, part: Parts::BOTH}
     }
 }
+
 impl AocRunner for AocRunner2021 {
     fn day (&self) -> usize {
         self.day
@@ -25,7 +26,13 @@ impl AocRunner for AocRunner2021 {
     fn part(&self) -> Parts {
         self.part
     }
-    fn run(& self) {
+    fn set_day(&mut self, day: usize) {
+        self.day = day;
+    }
+    fn set_part(&mut self, part: Parts){
+        self.part = part;
+    }
+    fn run(&mut self) {
         if let Ok(s) = std::fs::read_to_string(format!("input/2021/day{}.txt", self.day)) {
             match self.day {
                 1 => {
