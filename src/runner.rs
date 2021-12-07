@@ -11,7 +11,7 @@ pub trait AocRunner {
     F1: FnMut(&'_ mut A) -> T,
     F2: FnMut(&'_ mut A) -> T
     {
-        let s = std::fs::read_to_string("input/2021/day1.txt").unwrap();
+        let s = std::fs::read_to_string("input/2021/day7.txt").unwrap();
         let ss = s.clone();
         if let Some(genf) = gen {
             let (input, gen_time) = run_generator(ss, genf);

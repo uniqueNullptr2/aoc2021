@@ -6,6 +6,7 @@ pub mod aoc3;
 pub mod aoc4;
 pub mod aoc5;
 pub mod aoc6;
+pub mod aoc7;
 
 pub struct AocRunner2021 {
     day: usize,
@@ -19,8 +20,8 @@ impl AocRunner2021 {
 }
 impl AocRunner for AocRunner2021 {
     fn run(& self) {
-        self.run_day(Some(|s: String| aoc1::generate_1(&s)),
-                    |input: &mut Vec<u32>| aoc1::solve_part1(input),
-                    |input: &mut Vec<u32>| aoc1::solve_part2(input));
+        self.run_day(Some(|s: String| aoc7::input_generator(&s)),
+                    |input: &mut (Vec<(usize, usize)>, usize)| aoc7::solve_part1(input),
+                    |input: &mut (Vec<(usize,usize)>, usize)| aoc7::solve_part2(input));
     }
 }
