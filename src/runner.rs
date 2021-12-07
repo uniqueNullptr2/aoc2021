@@ -1,4 +1,5 @@
 use std::{time::{Instant, Duration}, fmt::Display};
+use crate::aoc2021::aoc8;
 
 
 pub trait AocRunner {
@@ -120,3 +121,17 @@ pub enum Parts {
     NONE
 }
 
+
+
+pub fn default_fn() {
+    let s = std::fs::read_to_string("input/2021/day8.txt").unwrap();
+    let mut start = Instant::now();
+    let input = aoc8::input_generator(&s);
+    println!("    Generator in {}", (Instant::now() - start).pretty());
+    start = Instant::now();
+    let sol1 = aoc8::solve_part1(&input);
+    println!("    Part1 in {}\t=> {}",  (Instant::now() - start).pretty(), sol1);
+    start = Instant::now();
+    let sol2 = aoc8::solve_part1(&input);
+    println!("    Part2 in {}\t=> {}",  (Instant::now() - start).pretty(), sol2);
+}

@@ -1,6 +1,5 @@
-use aoc2021::{aoc2021::AocRunner2021, runner::{AocRunner}};
+use aoc2021::{aoc2021::AocRunner2021, runner::{AocRunner, default_fn}};
 use clap::{Arg, App};
-pub mod runner;
 
 fn main() {
     let matches = App::new("AocRunner")
@@ -10,7 +9,8 @@ fn main() {
                         .arg(Arg::with_name("day")
                             .short("d")
                             .help("choose day to execute")
-                            .takes_value(true))
+                            .takes_value(true)
+                            .requires("year"))
                         .arg(Arg::with_name("part")
                             .short("p")
                             .help("choose part to execute")
@@ -19,18 +19,22 @@ fn main() {
                         .arg(Arg::with_name("year")
                             .short("y")
                             .help("choose year to execute")
-                            .takes_value(true)
-                            .required(true))
+                            .takes_value(true))
                         .get_matches();
     let day: Option<usize> = matches.value_of("day").map(|s|str::parse(s).unwrap());
     let part= matches.value_of("part").map(|s|str::parse(s).unwrap()).unwrap_or(0);
-    let year: usize = matches.value_of("year").map(|s|str::parse(s).unwrap()).unwrap();
-    match year {
-        2021 => {
-            AocRunner2021::new().execute(day, part);
-        },
-        _=> {
-            println!("Year not implemented.");
+    let year: Option<usize> = matches.value_of("year").map(|s|str::parse(s).unwrap());
+    if let Some(year) = year {
+        match year {
+            2021 => {
+                AocRunner2021::new().execute(day, part);
+            },
+            _=> {
+                println!("Year not implemented.");
+            }
         }
+    } else {
+        default_fn()
     }
 }
+
