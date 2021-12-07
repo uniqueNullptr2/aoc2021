@@ -11,46 +11,32 @@ pub fn input_generator(input: &str) -> (Vec<(usize,usize)>, usize) {
 }
 
 pub fn solve_part1(vec: &(Vec<(usize, usize)>, usize)) -> usize {
-    let mut l = usize::max_value();
     let e = vec.1;
-    for i in 0..=e{
-        let t = solve1(&vec.0, i);
-        if t < l  {
-            l = t;
-        }
-    }
-    l
+    (0..=e)
+        .map(|i| {
+            vec.0
+                .iter()
+                .map(|(f, n)| diff(*f,i)*n)
+                .sum()
+        })
+        .min()
+        .unwrap()
 }
 
 
 pub fn solve_part2(vec: &(Vec<(usize, usize)>, usize)) -> usize {
-    let mut l = usize::max_value();
     let e = vec.1;
-    for i in 0..=e as usize{
-        let t = solve2(&vec.0, i, e);
-        if t < l {
-            l = t;
-        }
-    }
-    l
-}
-
-fn solve1(vec: &[(usize,usize)], pos: usize) -> usize {
-    vec.iter().map(|(i,n)| diff(*i, pos) * n).sum()
-}
-
-fn solve2(vec: &[(usize,usize)], pos: usize, max: usize) -> usize {
-    let map = fuel(max);
-    vec.iter().map(|(i, n)| map[diff(*i,pos)]*n).sum()
-}
-fn fuel(max: usize) -> Vec<usize> {
-    let mut s = 0;
-    let mut v = vec!();
-    for i in 0..=max {
-        s += i;
-        v.push(s);
-    }
-    v
+    (0..=e)
+        .map(|i| {
+            vec.0
+                .iter()
+                .map(|(f, n)| {
+                    let m = diff(*f,i);
+                    (m*(m+1)/2)*n
+                }).sum()
+        })
+        .min()
+        .unwrap()
 }
 
 fn diff(a: usize, b: usize) -> usize {
