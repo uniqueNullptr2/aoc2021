@@ -10,9 +10,8 @@ pub fn solve_part1(vec: &[Vec<u32>]) -> u32 {
 
 
 pub fn solve_part2(vec: &[Vec<u32>]) -> u32 {
-    
+    let mut set = vec!(vec!(false; vec[0].len()); vec.len());
     let mut v = find_low_points(vec).into_iter().map(|(i,e)| {
-        let mut set = HashSet::new();
         count_basin(i, e, vec, &mut set)
     }).collect::<Vec<usize>>();
     v.sort_by(|a, b| b.cmp(a));
@@ -20,74 +19,47 @@ pub fn solve_part2(vec: &[Vec<u32>]) -> u32 {
     (v[0]*v[1]*v[2]) as u32
 }
 
-fn count_basin(i: usize, e: usize, vec: &[Vec<u32>], set: &mut HashSet<(usize,usize)>) -> usize{
-    if set.insert((i,e)) {
-        for p in get_surrounding2(i,e, vec) {
-            count_basin(p.0, p.1, vec, set);
-        }
-    }
-    set.len()
-}
-fn find_low_points(vec: &[Vec<u32>]) -> Vec<(usize, usize)> {
-    let l = vec.len()-1;
-    let m = vec[0].len()-1;
-    let mut v = vec!();
-    for i in 0..=l {
-        for e in 0..=m {
-            let n = vec[i][e];
-            let t = get_surrounding(i, e, vec)
-                    .iter()
-                    .filter(|f| if let Some(u) = f{ u > &n} else {true}).count();
-            if t == 4 {
-                v.push((i, e));
+fn count_basin(i: usize, e: usize, vec: &[Vec<u32>], set: &mut Vec<Vec<bool>>) -> usize{
+    let mut stack = vec!((i, e));
+    let mut c = 0;
+    loop {
+        if let Some((i, e)) = stack.pop() {
+            if !set[i][e] {
+                set[i][e] = true;
+                c += 1;
+                for p in get_surrounding(i,e, vec).iter().filter_map(|o|o.filter(|(_,_,u)| *u < 9)) {
+                    stack.push((p.0, p.1));
+                }
             }
+        } else {
+            break;
         }
     }
-    v
+    c
 }
 
-fn get_surrounding2(i: usize, e: usize, vec: &[Vec<u32>]) -> Vec<(usize, usize)> {
-    let mut r = vec!();
-    let l = vec.len()-1;
-    let m = vec[0].len()-1;
-    if i>0 && vec[i-1][e] < 9{
-        r.push( (i-1,e));
-    }
-    if i<l && vec[i+1][e] < 9{
-        r.push((i+1,e));
-    }
-    if e>0 && vec[i][e-1] < 9{
-        r.push((i,e-1));
-    }
-    if e<m && vec[i][e+1] < 9{
-        r.push((i,e+1));
-    }
-    r
+fn find_low_points(vec: &[Vec<u32>]) -> Vec<(usize, usize)> {
+    vec.iter()
+        .enumerate()
+        .map(|(i, v)| v.iter()
+            .enumerate()
+            .map(move |(e, n)| (i, e, n)))
+        .flatten()
+        .filter(|(i, e, n)| {
+            let t = get_surrounding(*i, *e, vec)
+                .iter()
+                .filter(|f| if let Some((_,_, u)) = f{ u > &n} else {true}).count();
+            t == 4
+        })
+        .map(|(i, e, _)| (i, e))
+        .collect()
 }
 
-fn get_surrounding(i: usize, e: usize, vec: &[Vec<u32>]) -> [Option<u32>;4] {
-    let mut r = [None; 4];
-    let l = vec.len()-1;
-    let m = vec[0].len()-1;
-    if i>0{
-        r[0] = Some(vec[i-1][e]);
-    } else {
-        r[0] = None;
-    }
-    if i<l{
-        r[1] = Some(vec[i+1][e]);
-    } else {
-        r[1] = None;
-    }
-    if e>0{
-        r[2] = Some(vec[i][e-1]);
-    } else {
-        r[2] = None;
-    }
-    if e<m{
-        r[3] = Some(vec[i][e+1]);
-    } else {
-        r[3] = None;
-    }
-    r
+
+
+fn get_surrounding(i: usize, e: usize, vec: &[Vec<u32>]) -> [Option<(usize, usize,u32)>;4] {
+    [vec.get(i-1).map(|v| v.get(e).map(|u| (i-1, e, *u))).flatten()
+    ,vec.get(i+1).map(|v| v.get(e).map(|u| (i+1, e, *u))).flatten()
+    ,vec.get(i).map(|v| v.get(e-1).map(|u| (i, e-1, *u))).flatten()
+    ,vec.get(i).map(|v| v.get(e+1).map(|u| (i, e+1, *u))).flatten()]
 }
