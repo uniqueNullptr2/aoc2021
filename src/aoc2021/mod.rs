@@ -9,6 +9,7 @@ pub mod aoc6;
 pub mod aoc7;
 pub mod aoc8;
 pub mod aoc9;
+pub mod aoc10;
 
 pub struct AocRunner2021 {
     day: usize,
@@ -78,7 +79,13 @@ impl AocRunner for AocRunner2021 {
                         aoc7::input_generator,
                         aoc7::solve_part1,
                         aoc7::solve_part2);
-                }
+                },
+                8 => {
+                    self.run_day_with_gen(&s,
+                        aoc8::input_generator,
+                        |input| aoc8::solve_part1(input),
+                        |input| aoc8::solve_part2(input));
+                },
 
                 9 => {
                     self.run_day_with_gen(&s,
