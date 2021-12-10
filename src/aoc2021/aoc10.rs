@@ -45,7 +45,6 @@ pub fn solve_part1(_vec: &[String]) -> usize {
             _ => ()
         }
     }
-    println!("{} {} {} {}", c0, c1, c2, c3);
     3*c0 + 57*c1 + 1197*c2 + 25137* c3
 }
 
@@ -90,7 +89,5 @@ pub fn solve_part2(_vec: &[String]) -> usize {
             score
         }).collect();
         scores.sort();
-        println!("{:?}",  scores);
-        println!("{}",scores.len());
         scores[(scores.len()-1)/2]
 }
