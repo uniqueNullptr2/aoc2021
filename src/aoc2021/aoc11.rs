@@ -61,14 +61,18 @@ fn flash_octos(octos: &mut [u8;100]) -> usize {
 fn get_octos(i: usize) -> [Option<usize>;8] {
     let x = i % 10;
     let y = (i - x) / 10;
+    let xm1 = x.checked_sub(1).filter(|n| *n < 10);
+    let xp1 = x.checked_add(1).filter(|n| *n < 10);
+    let ym1 = y.checked_sub(1).filter(|n| *n < 10);
+    let yp1 = y.checked_add(1).filter(|n| *n < 10);
     [
-        x.checked_sub(1).filter(|n| *n < 10).zip(y.checked_sub(1).filter(|n| *n < 10)).map(|(i,e)| e*10+i),
-        x.checked_sub(1).filter(|n| *n < 10).map(|e| e*10+y),
-        x.checked_sub(1).filter(|n| *n < 10).zip(y.checked_add(1).filter(|n| *n < 10)).map(|(i,e)| e*10+i),
-        y.checked_sub(1).filter(|n| *n < 10).map(|i| x*10+i),
-        y.checked_add(1).filter(|n| *n < 10).map(|i| x*10+i),
-        x.checked_add(1).filter(|n| *n < 10).zip(y.checked_sub(1).filter(|n| *n < 10)).map(|(i,e)| e*10+i),
-        x.checked_add(1).filter(|n| *n < 10).map(|e| e*10+y),
-        x.checked_add(1).filter(|n| *n < 10).zip(y.checked_add(1).filter(|n| *n < 10)).map(|(i,e)| e*10+i),
+        ym1.and(xm1).map(|_| i-11),
+        ym1.map(|_| i-10),
+        ym1.and(xp1).map(|_| i-9),
+        xm1.map(|_| i-1),
+        xp1.map(|_| i+1),
+        yp1.and(xm1).map(|_| i+9),
+        yp1.map(|_| i+10),
+        yp1.and(xp1).map(|_| i+11),
     ]
 }
