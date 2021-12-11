@@ -10,6 +10,7 @@ pub mod aoc7;
 pub mod aoc8;
 pub mod aoc9;
 pub mod aoc10;
+pub mod aoc11;
 
 pub struct AocRunner2021 {
     day: usize,
@@ -21,7 +22,11 @@ impl AocRunner2021 {
         Self{day: 0, part: Parts::BOTH}
     }
 }
-
+impl Default for AocRunner2021 {
+    fn default() -> Self {
+        Self::new()
+    }
+}
 impl AocRunner for AocRunner2021 {
     fn day (&self) -> usize {
         self.day

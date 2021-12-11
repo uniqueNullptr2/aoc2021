@@ -1,7 +1,7 @@
 use std::{time::{Instant, Duration}, fmt::Display};
-use crate::aoc2021::{aoc10};
+use crate::aoc2021::{aoc11};
 
-
+#[allow(clippy::redundant_clone)]
 pub trait AocRunner {
     fn execute(&mut self, day: Option<usize>, part: usize) {
         let part = match part {
@@ -124,14 +124,15 @@ pub enum Parts {
 
 
 pub fn default_fn() {
-    let s = std::fs::read_to_string("input/2021/day10.txt").unwrap();
+    let s = std::fs::read_to_string("input/2021/day11.txt").unwrap();
     let mut start = Instant::now();
-    let input = aoc10::input_generator(&s);
+    let mut input = aoc11::input_generator(&s);
+    let mut clone = input.clone();
     println!("    Generator in {}", (Instant::now() - start).pretty());
     start = Instant::now();
-    let sol1 = aoc10::solve_part1(&input);
+    let sol1 = aoc11::solve_part1(&mut input);
     println!("    Part1 in {}\t=> {}",  (Instant::now() - start).pretty(), sol1);
     start = Instant::now();
-    let sol2 = aoc10::solve_part2(&input);
+    let sol2 = aoc11::solve_part2(&mut clone);
     println!("    Part2 in {}\t=> {}",  (Instant::now() - start).pretty(), sol2);
 }

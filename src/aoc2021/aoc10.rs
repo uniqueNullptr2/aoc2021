@@ -88,6 +88,6 @@ pub fn solve_part2(_vec: &[String]) -> usize {
             }
             score
         }).collect();
-        scores.sort();
+        scores.sort_unstable();
         scores[(scores.len()-1)/2]
 }
