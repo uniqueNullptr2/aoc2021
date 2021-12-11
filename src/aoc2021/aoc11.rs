@@ -12,22 +12,10 @@ pub fn input_generator(input: &str) -> Vec<Vec<u8>> {
 pub fn solve_part1(_vec: &mut Vec<Vec<u8>>) -> usize {
     let mut c = 0;
     for _ in 0..100 {
-        let mut flashy = vec!();
-        for i in 0.._vec.len(){
-            for e in 0.._vec[0].len() {
-                _vec[i][e] += 1;
-                if _vec[i][e] > 9 {
-                    flashy.push((i,e))
-                }
-            }
-        }
-        for (i,e) in flashy {
-            c += 1;
-        }
+        c += flash_octos(_vec)
     }
     c
 }
-
 
 pub fn solve_part2(_vec: &mut Vec<Vec<u8>>) -> usize {
     let m = _vec.len();
