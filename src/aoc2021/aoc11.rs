@@ -1,28 +1,29 @@
 use std::collections::VecDeque;
 
 
-pub fn input_generator(input: &str) -> Vec<Vec<u8>> {
+pub fn input_generator(input: &str) -> [u8; 100] {
     input.lines()
         .map(|l| {
-            l.chars().map(|c| c.to_digit(10).unwrap() as u8).collect::<Vec<u8>>()
+            l.chars().map(|c| c.to_digit(10).unwrap() as u8)
         })
-        .collect()
+        .flatten()
+        .collect::<Vec<u8>>()
+        .try_into()
+        .unwrap()
 }
 
-pub fn solve_part1(_vec: &mut Vec<Vec<u8>>) -> usize {
+pub fn solve_part1(_vec: &mut [u8;100]) -> usize {
     let mut c = 0;
     for _ in 0..100 {
-        c += flash_octos(_vec)
+        c += flash_octos(_vec);
     }
     c
 }
 
-pub fn solve_part2(_vec: &mut Vec<Vec<u8>>) -> usize {
-    let m = _vec.len();
-    let n = _vec[0].len();
+pub fn solve_part2(_vec: &mut [u8;100]) -> usize {
     let mut i = 0;
     loop {
-        if flash_octos( _vec) == m*n {
+        if flash_octos( _vec) == 100 {
             break;
         }
         i += 1;
@@ -30,27 +31,25 @@ pub fn solve_part2(_vec: &mut Vec<Vec<u8>>) -> usize {
     i+1
 }
 
-fn flash_octos(octos: &mut Vec<Vec<u8>>) -> usize {
-    let mut stack = VecDeque::<(usize,usize)>::new();
-    for i in 0..octos.len(){
-        for e in 0..octos[0].len() {
-            octos[i][e] += 1;
-            if octos[i][e] == 10 {
-                stack.push_back((i,e));
+fn flash_octos(octos: &mut [u8;100]) -> usize {
+    let mut stack = VecDeque::<usize>::new();
+    for (i,octo) in octos.iter_mut().enumerate() {
+            *octo += 1;
+            if *octo == 10 {
+                stack.push_back(i);
             }
-        }
     }
     let mut c = 0;
-    while let Some((i,e)) = stack.pop_back() {
-        let octo = &mut octos[i][e];
+    while let Some(i) = stack.pop_back() {
+        let octo = &mut octos[i];
         if *octo != 0{
             *octo += 1;
             if *octo > 9 {
                 c += 1;
                 *octo = 0;
-                for (x,y) in get_octos(i, e) {
-                    if octos.get(x).map(|l| l.get(y)).flatten().is_some() {
-                        stack.push_back((x,y))
+                for e in get_octos(i) {
+                    if let Some(x) = e.map(|e| octos.get(e).map(|_| e)).flatten() {
+                        stack.push_back(x);
                     }
                 }
             }
@@ -59,15 +58,17 @@ fn flash_octos(octos: &mut Vec<Vec<u8>>) -> usize {
     c
 }
 
-const fn get_octos(i: usize, e: usize) -> [(usize,usize);8] {
+fn get_octos(i: usize) -> [Option<usize>;8] {
+    let x = i % 10;
+    let y = (i - x) / 10;
     [
-        (i-1,e-1),
-        (i-1,e),
-        (i-1,e+1),
-        (i,e-1),
-        (i,e+1),
-        (i+1,e-1),
-        (i+1,e),
-        (i+1,e+1)
+        x.checked_sub(1).filter(|n| *n < 10).zip(y.checked_sub(1).filter(|n| *n < 10)).map(|(i,e)| e*10+i),
+        x.checked_sub(1).filter(|n| *n < 10).map(|e| e*10+y),
+        x.checked_sub(1).filter(|n| *n < 10).zip(y.checked_add(1).filter(|n| *n < 10)).map(|(i,e)| e*10+i),
+        y.checked_sub(1).filter(|n| *n < 10).map(|i| x*10+i),
+        y.checked_add(1).filter(|n| *n < 10).map(|i| x*10+i),
+        x.checked_add(1).filter(|n| *n < 10).zip(y.checked_sub(1).filter(|n| *n < 10)).map(|(i,e)| e*10+i),
+        x.checked_add(1).filter(|n| *n < 10).map(|e| e*10+y),
+        x.checked_add(1).filter(|n| *n < 10).zip(y.checked_add(1).filter(|n| *n < 10)).map(|(i,e)| e*10+i),
     ]
 }
