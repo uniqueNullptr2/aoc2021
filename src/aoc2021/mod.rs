@@ -11,6 +11,7 @@ pub mod aoc8;
 pub mod aoc9;
 pub mod aoc10;
 pub mod aoc11;
+pub mod aoc12;
 
 pub struct AocRunner2021 {
     day: usize,
@@ -91,7 +92,6 @@ impl AocRunner for AocRunner2021 {
                         |input| aoc8::solve_part1(input),
                         |input| aoc8::solve_part2(input));
                 },
-
                 9 => {
                     self.run_day_with_gen(&s,
                         aoc9::input_generator,
@@ -109,6 +109,12 @@ impl AocRunner for AocRunner2021 {
                         aoc11::input_generator,
                         |input| aoc11::solve_part1(input),
                         |input| aoc11::solve_part2(input));
+                },
+                12 => {
+                    self.run_day_with_gen(&s,
+                        aoc12::input_generator,
+                        |input| aoc12::solve_part1(input),
+                        |input| aoc12::solve_part2(input));
                 },
                 x => println!("Day{} not implemented", x)
             }
