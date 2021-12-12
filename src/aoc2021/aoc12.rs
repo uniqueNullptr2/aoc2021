@@ -50,55 +50,91 @@ pub fn input_generator(input: &str) -> Graph {
 pub fn solve_part1(graph: &Graph) -> usize {
     let mut stack = VecDeque::new();
     let mask = Bitmap::<64>::new();
-    stack.push_back((graph.get_start(), mask));
-    let mut c = 0;
-    while let Some((last, mask)) = stack.pop_back() {
-        let (_, _, _, _, indices) = graph.get(last);
-        for i in indices {
-            let (_, start, end, lower,_) = graph.get(*i);
-            if *end {
-                c += 1;
-            } else if *start {
+    stack.push_back((graph.get_start(), mask, false));
+    let i = graph.get_start();
+    let mut map = HashMap::new();
+    solve_part1_rec(graph, i, &mut map, mask)
+}
+pub fn solve_part1_rec(graph: &Graph, last: usize, map: &mut HashMap<(usize, Bitmap<64>), usize>, mask: Bitmap<64>) -> usize {
 
-            } else {
-                let mut mask = mask;
-                if *lower && !mask.get(*i) {
-                    mask.set(*i, true);
-                    stack.push_back((*i, mask))
-                } else if !*lower{
-                    stack.push_back((*i, mask))
+    let (_, _, _, _, indices) = graph.get(last);
+    let mut c: usize = 0;
+    for i in indices {
+        let (_, start, end, lower,_) = graph.get(*i);
+        if *end {
+            c = c.checked_add(1).unwrap();
+        } else if *start {
+        } else {
+            let mut mask = mask;
+            if *lower && !mask.get(*i) {
+                mask.set(*i, true);
+                if map.contains_key(&(*i, mask)) {
+                    c = c.checked_add(*map.get(&(*i, mask)).unwrap()).unwrap();
+                } else {
+                    let t = solve_part1_rec(graph, *i, map, mask);
+                    c = c.checked_add(t).unwrap();
+                    map.insert((*i, mask), t);
+                }
+            }else if !*lower{
+                if map.contains_key(&(*i, mask)) {
+                    c = c.checked_add(*map.get(&(*i, mask)).unwrap()).unwrap();
+                } else {
+                    let t = solve_part1_rec(graph, *i, map, mask);
+                    c = c.checked_add(t).unwrap();
+                    map.insert((*i, mask), t);
                 }
             }
         }
     }
-    c
+c
 }
 
 pub fn solve_part2(graph: &Graph) -> usize {
     let mut stack = VecDeque::new();
     let mask = Bitmap::<64>::new();
     stack.push_back((graph.get_start(), mask, false));
-    let mut c = 0;
-    while let Some((last, mask, double)) = stack.pop_back() {
+    let i = graph.get_start();
+    let mut map = HashMap::new();
+    solve_part2_rec(graph, i, &mut map, mask, false)
+}
+pub fn solve_part2_rec(graph: &Graph, last: usize, map: &mut HashMap<(usize, Bitmap<64>, bool), usize>, mask: Bitmap<64>, double: bool) -> usize {
+
         let (_, _, _, _, indices) = graph.get(last);
+        let mut c: usize = 0;
         for i in indices {
             let (_, start, end, lower,_) = graph.get(*i);
             if *end {
-                c += 1;
+                c = c.checked_add(1).unwrap();
             } else if *start {
-
             } else {
                 let mut mask = mask;
                 if *lower && !mask.get(*i) {
                     mask.set(*i, true);
-                    stack.push_back((*i, mask, double))
+                    if map.contains_key(&(*i, mask, double)) {
+                        c = c.checked_add(*map.get(&(*i, mask, double)).unwrap()).unwrap();
+                    } else {
+                        let t = solve_part2_rec(graph, *i, map, mask, double);
+                        c = c.checked_add(t).unwrap();
+                        map.insert((*i, mask, double), t);
+                    }
                 } else if *lower && !double{
-                    stack.push_back((*i, mask, true))
+                    if map.contains_key(&(*i, mask, true)) {
+                        c = c.checked_add(*map.get(&(*i, mask, true)).unwrap()).unwrap();
+                    } else {
+                        let t = solve_part2_rec(graph, *i, map, mask, true);
+                        c = c.checked_add(t).unwrap();
+                        map.insert((*i, mask, true), t);
+                    }
                 } else if !*lower{
-                    stack.push_back((*i, mask, double))
+                    if map.contains_key(&(*i, mask, double)) {
+                        c = c.checked_add(*map.get(&(*i, mask, double)).unwrap()).unwrap();
+                    } else {
+                        let t = solve_part2_rec(graph, *i, map, mask, double);
+                        c = c.checked_add(t).unwrap();
+                        map.insert((*i, mask, double), t);
+                    }
                 }
             }
         }
-    }
     c
 }
