@@ -48,7 +48,7 @@ fn flash_octos(octos: &mut [Octo]) -> usize {
             if *octo > 9 {
                 c += 1;
                 *octo = 0;
-                for i in get_octos(i, len).into_iter().filter_map(|f| f) {
+                for i in get_octos(i, len).into_iter().flatten() {
                     stack.push_back(i);
                 }
             }

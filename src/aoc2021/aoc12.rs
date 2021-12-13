@@ -25,8 +25,8 @@ impl Graph {
                 let mut split = l.trim().split('-');
                 (split.next().unwrap(), split.next().unwrap())
             }) {
-                map.entry(a.to_owned()).or_insert(vec!()).push(b.to_owned());
-                map.entry(b.to_owned()).or_insert(vec!()).push(a.to_owned());
+                map.entry(a.to_owned()).or_insert_with(Vec::new).push(b.to_owned());
+                map.entry(b.to_owned()).or_insert_with(Vec::new).push(a.to_owned());
             }
         let tmp = map.iter().map(|(s,_)| s.to_owned()).collect::<Vec<String>>();
 

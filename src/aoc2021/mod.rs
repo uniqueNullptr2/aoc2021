@@ -115,14 +115,14 @@ impl AocRunner for AocRunner2021 {
                 12 => {
                     self.run_day_with_gen(&s,
                         aoc12::input_generator,
-                        |input| aoc12::solve_part1(input),
-                        |input| aoc12::solve_part2(input));
+                        aoc12::solve_part1,
+                        aoc12::solve_part2);
                 },
                 13 => {
                     self.run_day_mut_with_gen(&s,
                         aoc13::input_generator,
-                        |input| aoc13::solve_part1(input),
-                        |input| aoc13::solve_part2(input));
+                        aoc13::solve_part1,
+                        aoc13::solve_part2);
                 },
                 x => println!("Day{} not implemented", x)
             }

@@ -236,7 +236,6 @@ pub fn day13_solve2(c: &mut Criterion) {
 
 criterion_group!( aoc2021,  day1_gen, day1_solve1, day1_solve2,
                             day2_gen, day2_solve1, day2_solve2,
-                            day2_gen, day2_solve1, day2_solve2,
                             day3_gen, day3_solve1, day3_solve2,
                             day4_gen, day4_solve1, day4_solve2,
                             day5_gen, day5_solve1, day5_solve2_arr, day5_solve2_map, day5_solve2_btree, day5_solve2_vec,

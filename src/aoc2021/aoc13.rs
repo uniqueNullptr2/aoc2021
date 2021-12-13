@@ -1,6 +1,8 @@
+#![allow(clippy::type_complexity)]
 use std::str::FromStr;
 
 use itertools::Itertools;
+
 
 pub fn input_generator(input: &str) -> (Vec<(i32,i32)>, Vec<(Option<i32>,Option<i32>)>) {
     let mut points = vec!();
@@ -40,7 +42,6 @@ pub fn solve_part1(input: &mut (Vec<(i32,i32)>, Vec<(Option<i32>,Option<i32>)>))
 }
 
 pub fn solve_part2(input: &mut (Vec<(i32,i32)>, Vec<(Option<i32>,Option<i32>)>)) -> usize {
-    let o = input.1[0];
     for o in &input.1 {
         input.0.iter_mut().for_each(|(x,y)| {
             match o {

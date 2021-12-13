@@ -26,32 +26,23 @@ pub fn input_generator(input: &str) -> Vec<Direction> {
 
 
 pub fn solve_part1(input: &[Direction]) -> u32 {
-    let mut x = 0;
-    let mut y = 0;
-    for dir in input {
-        match dir {
-            Direction::FORWARD(n) => x += n,
-            Direction::DOWN(n) => y += n,
-            Direction::UP(n) => y -= n,
+    let (x,y) = input.iter().fold((0,0), |(x,y), d| {
+        match d {
+            Direction::FORWARD(n) => (x+n, y),
+            Direction::DOWN(n) => (x,y+n),
+            Direction::UP(n) => (x,y-n),
         }
-    }
+    });
     x * y
 }
 
-//TODO try fold
 pub fn solve_part2(input: &[Direction]) -> u32 {
-    let mut x = 0;
-    let mut y = 0;
-    let mut aim = 0;
-    for dir in input {
-        match dir {
-            Direction::FORWARD(n) => {
-                x += aim * n;
-                y += n;
-            },
-            Direction::DOWN(n) => aim += n,
-            Direction::UP(n) => aim -= n,
+    let (x,y,_) = input.iter().fold((0,0,0), |(x, y, aim), d| {
+        match d {
+            Direction::FORWARD(n) => (x+n*aim, y+n, aim),
+            Direction::DOWN(n) => (x,y,aim+n),
+            Direction::UP(n) => (x,y,aim-n),
         }
-    }
+    });
     x * y
 }
