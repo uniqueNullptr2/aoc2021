@@ -26,6 +26,7 @@ pub fn solve_part1(vec: &(Vec<(usize, usize)>, usize)) -> usize {
 
 pub fn solve_part2(vec: &(Vec<(usize, usize)>, usize)) -> usize {
     let e = vec.1;
+    // TODO Mean
     (0..=e)
         .map(|i| {
             vec.0

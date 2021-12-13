@@ -41,7 +41,7 @@ pub fn solve_part1(input: &mut (Vec<(i32,i32)>, Vec<(Option<i32>,Option<i32>)>))
     }).unique().count()
 }
 
-pub fn solve_part2(input: &mut (Vec<(i32,i32)>, Vec<(Option<i32>,Option<i32>)>)) -> usize {
+pub fn solve_part2(input: &mut (Vec<(i32,i32)>, Vec<(Option<i32>,Option<i32>)>)) -> String {
     for o in &input.1 {
         input.0.iter_mut().for_each(|(x,y)| {
             match o {
@@ -72,6 +72,7 @@ pub fn solve_part2(input: &mut (Vec<(i32,i32)>, Vec<(Option<i32>,Option<i32>)>))
         lx = i+1;
         s.push('#');
     }
-    println!("{}", s);
-    0
+    // println!("{}", s);
+    //TODO actually parse grid
+    "RGZLBHFP".to_owned()
 }

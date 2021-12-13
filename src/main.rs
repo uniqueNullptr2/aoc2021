@@ -11,23 +11,17 @@ fn main() {
                             .help("choose day to execute")
                             .takes_value(true)
                             .requires("year"))
-                        .arg(Arg::with_name("part")
-                            .short("p")
-                            .help("choose part to execute")
-                            .takes_value(true)
-                            .requires("day"))
                         .arg(Arg::with_name("year")
                             .short("y")
                             .help("choose year to execute")
                             .takes_value(true))
                         .get_matches();
     let day: Option<usize> = matches.value_of("day").map(|s|str::parse(s).unwrap());
-    let part= matches.value_of("part").map(|s|str::parse(s).unwrap()).unwrap_or(0);
     let year: Option<usize> = matches.value_of("year").map(|s|str::parse(s).unwrap());
     if let Some(year) = year {
         match year {
             2021 => {
-                AocRunner2021::new().execute(day, part);
+                AocRunner2021::new().execute(day);
             },
             _=> {
                 println!("Year not implemented.");
