@@ -24,7 +24,7 @@ fn count_basin(i: usize, e: usize, vec: &[Vec<u32>], set: &mut Vec<Vec<bool>>) -
         if !set[i][e] {
             set[i][e] = true;
             c += 1;
-            for p in get_surrounding(i,e, vec).iter().filter_map(|o|o.filter(|(_,_,u)| *u < 9)) {
+            for p in get_surrounding(i,e, vec).iter().filter_map(|o|o.filter(|(i,e,u)| *u < 9 && !set[*i][*e])) {
                 stack.push((p.0, p.1));
             }
         }
@@ -52,8 +52,8 @@ fn find_low_points(vec: &[Vec<u32>]) -> Vec<(usize, usize)> {
 
 //TODO insert rust magic
 fn get_surrounding(i: usize, e: usize, vec: &[Vec<u32>]) -> [Option<(usize, usize,u32)>;4] {
-    [vec.get(i-1).map(|v| v.get(e).map(|u| (i-1, e, *u))).flatten()
+    [i.checked_sub(1).map(|i| vec.get(i).map(|v| v.get(e).map(|u| (i, e, *u)))).flatten().flatten()
     ,vec.get(i+1).map(|v| v.get(e).map(|u| (i+1, e, *u))).flatten()
-    ,vec.get(i).map(|v| v.get(e-1).map(|u| (i, e-1, *u))).flatten()
+    ,vec.get(i).map(|v| e.checked_sub(1).map(|e| v.get(e).map(|u| (i, e, *u)))).flatten().flatten()
     ,vec.get(i).map(|v| v.get(e+1).map(|u| (i, e+1, *u))).flatten()]
 }
