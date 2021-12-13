@@ -38,7 +38,7 @@ pub fn solve_part1(input: &[Direction]) -> u32 {
     x * y
 }
 
-
+//TODO try fold
 pub fn solve_part2(input: &[Direction]) -> u32 {
     let mut x = 0;
     let mut y = 0;

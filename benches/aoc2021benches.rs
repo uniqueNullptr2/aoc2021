@@ -1,8 +1,9 @@
 use criterion::{Criterion, criterion_group};
-use aoc2021::aoc2021::{aoc1, aoc2, aoc3, aoc4, aoc5, aoc6, aoc7, aoc9, aoc8, aoc10, aoc11, aoc12};
+use aoc2021::aoc2021::{aoc1, aoc2, aoc3, aoc4, aoc5, aoc6, aoc7, aoc9, aoc8, aoc10, aoc11, aoc12, aoc13};
 
 
-
+// TODO one bench function per day
+// TODO ignore file not existing for benchmarks
 pub fn day1_gen(c: &mut Criterion) {
     let s = std::fs::read_to_string("input/2021/day1.txt").unwrap();
     c.bench_function("aoc2021_day1_gen",|b| b.iter(|| aoc1::generate_1(&s)));
@@ -216,6 +217,23 @@ pub fn day12_solve2(c: &mut Criterion) {
     c.bench_function("aoc2021_day12_solve2",|b| b.iter_batched(|| v.clone(), |mut v| aoc12::solve_part2(&mut v), criterion::BatchSize::SmallInput));
 }
 
+pub fn day13_gen(c: &mut Criterion) {
+    let s = std::fs::read_to_string("input/2021/day13.txt").unwrap();
+    c.bench_function("aoc2021_day13_gen",|b| b.iter(|| aoc13::input_generator(&s)));
+}
+pub fn day13_solve1(c: &mut Criterion) {
+    let s1 = std::fs::read_to_string("input/2021/day13.txt").unwrap();
+    let s2 = s1.trim_end_matches("\n");
+    let v = aoc13::input_generator(&s2);
+    c.bench_function("aoc2021_day13_solve1",|b| b.iter_batched(|| v.clone(), |mut v| aoc13::solve_part1(&mut v), criterion::BatchSize::SmallInput));
+}
+pub fn day13_solve2(c: &mut Criterion) {
+    let s1 = std::fs::read_to_string("input/2021/day13.txt").unwrap();
+    let s2 = s1.trim_end_matches("\n");
+    let v = aoc13::input_generator(&s2);
+    c.bench_function("aoc2021_day13_solve2",|b| b.iter_batched(|| v.clone(), |mut v| aoc13::solve_part2(&mut v), criterion::BatchSize::SmallInput));
+}
+
 criterion_group!( aoc2021,  day1_gen, day1_solve1, day1_solve2,
                             day2_gen, day2_solve1, day2_solve2,
                             day2_gen, day2_solve1, day2_solve2,
@@ -228,4 +246,5 @@ criterion_group!( aoc2021,  day1_gen, day1_solve1, day1_solve2,
                             day9_gen, day9_solve1, day9_solve2,
                             day10_gen, day10_solve1, day10_solve2,
                             day11_gen, day11_solve1, day11_solve2,
-                            day12_gen, day12_solve1, day12_solve2);
+                            day12_gen, day12_solve1, day12_solve2,
+                            day13_gen, day13_solve1, day13_solve2);

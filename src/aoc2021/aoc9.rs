@@ -50,7 +50,7 @@ fn find_low_points(vec: &[Vec<u32>]) -> Vec<(usize, usize)> {
 }
 
 
-
+//TODO insert rust magic
 fn get_surrounding(i: usize, e: usize, vec: &[Vec<u32>]) -> [Option<(usize, usize,u32)>;4] {
     [vec.get(i-1).map(|v| v.get(e).map(|u| (i-1, e, *u))).flatten()
     ,vec.get(i+1).map(|v| v.get(e).map(|u| (i+1, e, *u))).flatten()

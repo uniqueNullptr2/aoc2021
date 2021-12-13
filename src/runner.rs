@@ -1,5 +1,5 @@
 use std::{time::{Instant, Duration}, fmt::Display};
-use crate::aoc2021::{aoc12};
+use crate::aoc2021::{aoc13};
 
 #[allow(clippy::redundant_clone)]
 pub trait AocRunner {
@@ -20,6 +20,7 @@ pub trait AocRunner {
                 self.run();
             }
         }
+        //TODO this measures io and cloning in between
         println!("===> {} for everything", (Instant::now() - now).pretty());
     }
     fn run(&mut self);
@@ -28,6 +29,7 @@ pub trait AocRunner {
     fn part(&self) -> Parts;
     fn set_day(&mut self, day: usize);
     fn set_part(&mut self, part: Parts);
+    // TODO different output types for F1 and F2
     fn run_day_mut_with_gen<A, G, T, F1, F2>(&self, input: &str, gen: G, fn1: F1, fn2: F2)
     where T: Display,
     G: Fn(&str) -> A,
@@ -124,15 +126,15 @@ pub enum Parts {
 
 
 pub fn default_fn() {
-    let s = std::fs::read_to_string("input/2021/day12.txt").unwrap();
+    let s = std::fs::read_to_string("input/2021/day13.txt").unwrap();
     let mut start = Instant::now();
-    let mut input = aoc12::input_generator(&s);
+    let mut input = aoc13::input_generator(&s);
     let mut clone = input.clone();
     println!("    Generator in {}", (Instant::now() - start).pretty());
     start = Instant::now();
-    let sol1 = aoc12::solve_part1(&mut input);
+    let sol1 = aoc13::solve_part1(&mut input);
     println!("    Part1 in {}\t=> {}",  (Instant::now() - start).pretty(), sol1);
     start = Instant::now();
-    let sol2 = aoc12::solve_part2(&mut clone);
+    let sol2 = aoc13::solve_part2(&mut clone);
     println!("    Part2 in {}\t=> {}",  (Instant::now() - start).pretty(), sol2);
 }
