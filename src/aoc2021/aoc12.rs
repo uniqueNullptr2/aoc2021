@@ -33,7 +33,6 @@ impl Graph {
         let g = tmp.iter()
             .map(|k| (k.to_owned(), k=="start", k=="end", &k.to_lowercase() == k, map.get(k).unwrap().iter().map(|s| tmp.iter().position(|r| r==s ).unwrap()).collect())).collect();
         Self{g}
-        // let v = map.into_iter().enumerate()
     }
 
     pub fn get_start(&self) -> usize {

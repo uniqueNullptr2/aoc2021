@@ -2,8 +2,6 @@ use criterion::{Criterion, criterion_group};
 use aoc2021::aoc2021::{aoc1, aoc2, aoc3, aoc4, aoc5, aoc6, aoc7, aoc9, aoc8, aoc10, aoc11, aoc12, aoc13};
 
 
-// TODO one bench function per day
-// TODO ignore file not existing for benchmarks
 pub fn day1(c: &mut Criterion) {
     c.bench_function("aoc2021_day01_gen",|b| {
         b.iter_batched(|| {

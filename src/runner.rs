@@ -66,7 +66,6 @@ impl AocResult {
     }
 }
 
-// #[allow(clippy::redundant_clone)]
 pub trait AocRunner {
     fn execute(&mut self, day: Option<usize>) {
         if let Some(day) = day {
@@ -94,10 +93,8 @@ pub trait AocRunner {
                 Duration::from_secs_f64(dt.as_secs_f64() / l));
 
                 AocResult::print_header();
-                for result in results {
-                    if let Some(result) = result {
-                        result.print_line(&a1, &a2, &at);
-                    }
+                for result in results.into_iter().flatten() {
+                    result.print_line(&a1, &a2, &at);
                 }
                 println!("===> {} for everything", dur_string(&dt))
         }

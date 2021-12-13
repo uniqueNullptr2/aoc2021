@@ -8,7 +8,6 @@ pub fn input_generator(input: &str) -> (Vec<(i32,i32)>, Vec<(Option<i32>,Option<
     let mut points = vec!();
     let mut folds = vec!();
     for l in input.lines() {
-        // println!("{}", l);
         if l.starts_with("fold along y") {
             let s = l.trim();
             let i = s.find('=').unwrap();
