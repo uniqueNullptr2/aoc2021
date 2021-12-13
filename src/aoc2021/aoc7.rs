@@ -1,43 +1,62 @@
 use std::str::FromStr;
 
-pub fn input_generator(input: &str) -> (Vec<(usize,usize)>, usize) {
-    let v: Vec<usize> = input.split(',').map(|s| usize::from_str(s.trim()).unwrap()).collect();
-    let max = *v.iter().max().unwrap();
-    let mut r = vec!(0; max+1);
-    for i in v {
-        r[i] += 1;
+pub fn input_generator(input: &str) -> Vec<usize> {
+    input
+        .split(',')
+        .map(|s| usize::from_str(s.trim()).unwrap())
+        .collect::<Vec<usize>>()
+}
+
+pub fn solve_part1(vec: &[usize]) -> usize {
+    let mut i = 0;
+    let mut last = 0;
+    loop {
+        let t: usize = vec
+            .iter()
+            .map(|n| diff(*n,i))
+            .sum();
+        if i != 0 && t > last {
+            break;
+        } else {
+            last = t;
+            i += 1;
+        }
     }
-    (r.into_iter().enumerate().filter(|(_, e)| *e > 0).collect(), max)
-}
-
-pub fn solve_part1(vec: &(Vec<(usize, usize)>, usize)) -> usize {
-    let e = vec.1;
-    (0..=e)
-        .map(|i| {
-            vec.0
-                .iter()
-                .map(|(f, n)| diff(*f,i)*n)
-                .sum()
-        })
-        .min()
-        .unwrap()
+    last
 }
 
 
-pub fn solve_part2(vec: &(Vec<(usize, usize)>, usize)) -> usize {
-    let e = vec.1;
-    // TODO Mean
-    (0..=e)
-        .map(|i| {
-            vec.0
-                .iter()
-                .map(|(f, n)| {
-                    let m = diff(*f,i);
-                    (m*(m+1)/2)*n
-                }).sum()
+fn find_mean(vec: &[usize]) -> (usize, usize, usize) {
+    println!("mean: {}", vec.iter().sum::<usize>() as f64 / vec.len() as f64);
+    let c = (vec.iter().sum::<usize>() as f64 / vec.len() as f64).round() as usize;
+    (c-1, c, c+1)
+}
+
+pub fn solve_part2(vec: &[usize]) -> usize {
+    let (a,b,c) = find_mean(vec);
+
+    let aa: usize = vec
+        .iter()
+        .map(|n| {
+            let m = diff(*n,a);
+            m*(m+1)/2
         })
-        .min()
-        .unwrap()
+        .sum();
+    let bb: usize = vec
+        .iter()
+        .map(|n| {
+            let m = diff(*n,b);
+            m*(m+1)/2
+        })
+        .sum();
+    let cc: usize = vec
+        .iter()
+        .map(|n| {
+            let m = diff(*n,c);
+            m*(m+1)/2
+        })
+        .sum();
+    aa.min(bb).min(cc)
 }
 
 fn diff(a: usize, b: usize) -> usize {

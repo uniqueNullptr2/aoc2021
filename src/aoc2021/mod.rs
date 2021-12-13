@@ -80,8 +80,8 @@ impl AocRunner for AocRunner2021 {
                 7 => {
                     Some(self.run_day("AOC 2021 Day07", &s,
                         aoc7::input_generator,
-                        aoc7::solve_part1,
-                        aoc7::solve_part2))
+                        |input| aoc7::solve_part1(&input),
+                        |input| aoc7::solve_part2(&input)))
                 },
                 8 => {
                     Some(self.run_day("AOC 2021 Day08", &s,
