@@ -80,60 +80,60 @@ pub fn day4(c: &mut Criterion) {
         b.iter_batched(|| {
             let s = std::fs::read_to_string("input/2021/day4.txt").unwrap();
             aoc4::input_generator(&s)
-        }, |s| aoc4::solve_part1(&s), criterion::BatchSize::SmallInput)
+        }, |mut s| aoc4::solve_part1(&mut s), criterion::BatchSize::SmallInput)
     });
 
     c.bench_function("aoc2021_day04_solve2",|b| {
         b.iter_batched(|| {
             let s = std::fs::read_to_string("input/2021/day4.txt").unwrap();
             aoc4::input_generator(&s)
-        }, |s| aoc4::solve_part2(&s), criterion::BatchSize::SmallInput)
+        }, |mut s| aoc4::solve_part2(&mut s), criterion::BatchSize::SmallInput)
     });
 }
 
 
-pub fn day5(c: &mut Criterion) {
-    c.bench_function("aoc2021_day05_gen",|b| {
-        b.iter_batched(|| {
-            std::fs::read_to_string("input/2021/day5.txt").unwrap()
-        }, |s| aoc5::input_generator(&s), criterion::BatchSize::SmallInput)
-    });
+// pub fn day5(c: &mut Criterion) {
+//     c.bench_function("aoc2021_day05_gen",|b| {
+//         b.iter_batched(|| {
+//             std::fs::read_to_string("input/2021/day5.txt").unwrap()
+//         }, |s| aoc5::input_generator(&s), criterion::BatchSize::SmallInput)
+//     });
 
-    c.bench_function("aoc2021_day05_solve1",|b| {
-        b.iter_batched(|| {
-            let s = std::fs::read_to_string("input/2021/day5.txt").unwrap();
-            aoc5::input_generator(&s)
-        }, |s| aoc5::solve_part1(&s), criterion::BatchSize::SmallInput)
-    });
+//     c.bench_function("aoc2021_day05_solve1",|b| {
+//         b.iter_batched(|| {
+//             let s = std::fs::read_to_string("input/2021/day5.txt").unwrap();
+//             aoc5::input_generator(&s)
+//         }, |s| aoc5::solve_part1(&s), criterion::BatchSize::SmallInput)
+//     });
 
-    c.bench_function("aoc2021_day05_solve2_arr",|b| {
-        b.iter_batched(|| {
-            let s = std::fs::read_to_string("input/2021/day5.txt").unwrap();
-            aoc5::input_generator(&s)
-        }, |s| aoc5::solve_part2_arr(&s), criterion::BatchSize::SmallInput)
-    });
+//     c.bench_function("aoc2021_day05_solve2_arr",|b| {
+//         b.iter_batched(|| {
+//             let s = std::fs::read_to_string("input/2021/day5.txt").unwrap();
+//             aoc5::input_generator(&s)
+//         }, |s| aoc5::solve_part2_arr(&s), criterion::BatchSize::SmallInput)
+//     });
 
-    c.bench_function("aoc2021_day05_solve2_vec",|b| {
-        b.iter_batched(|| {
-            let s = std::fs::read_to_string("input/2021/day5.txt").unwrap();
-            aoc5::input_generator(&s)
-        }, |s| aoc5::solve_part2_vec(&s), criterion::BatchSize::SmallInput)
-    });
+//     c.bench_function("aoc2021_day05_solve2_vec",|b| {
+//         b.iter_batched(|| {
+//             let s = std::fs::read_to_string("input/2021/day5.txt").unwrap();
+//             aoc5::input_generator(&s)
+//         }, |s| aoc5::solve_part2_vec(&s), criterion::BatchSize::SmallInput)
+//     });
 
-    c.bench_function("aoc2021_day05_solve2_map",|b| {
-        b.iter_batched(|| {
-            let s = std::fs::read_to_string("input/2021/day5.txt").unwrap();
-            aoc5::input_generator(&s)
-        }, |s| aoc5::solve_part2_map(&s), criterion::BatchSize::SmallInput)
-    });
+//     c.bench_function("aoc2021_day05_solve2_map",|b| {
+//         b.iter_batched(|| {
+//             let s = std::fs::read_to_string("input/2021/day5.txt").unwrap();
+//             aoc5::input_generator(&s)
+//         }, |s| aoc5::solve_part2_map(&s), criterion::BatchSize::SmallInput)
+//     });
 
-    c.bench_function("aoc2021_day05_solve2_btree",|b| {
-        b.iter_batched(|| {
-            let s = std::fs::read_to_string("input/2021/day5.txt").unwrap();
-            aoc5::input_generator(&s)
-        }, |s| aoc5::solve_part2_btree(&s), criterion::BatchSize::SmallInput)
-    });
-}
+//     c.bench_function("aoc2021_day05_solve2_btree",|b| {
+//         b.iter_batched(|| {
+//             let s = std::fs::read_to_string("input/2021/day5.txt").unwrap();
+//             aoc5::input_generator(&s)
+//         }, |s| aoc5::solve_part2_btree(&s), criterion::BatchSize::SmallInput)
+//     });
+// }
 
 pub fn day6(c: &mut Criterion) {
     c.bench_function("aoc2021_day06_gen",|b| {
@@ -338,7 +338,7 @@ criterion_group!( aoc2021,  day1,
                             day2,
                             day3,
                             day4,
-                            day5,
+                            // day5,
                             day6,
                             day7,
                             day8,

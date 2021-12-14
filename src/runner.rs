@@ -1,5 +1,5 @@
 use std::{time::{Instant, Duration}, fmt::Display};
-use crate::aoc2021::{aoc14};
+use crate::aoc2021::{aoc14, aoc5};
 
 
 pub struct AocResult {
@@ -167,15 +167,15 @@ pub enum Parts {
 #[allow(unused_mut)]
 #[allow(clippy::unnecessary_mut_passed)]
 pub fn default_fn() {
-    let s = std::fs::read_to_string("input/2021/day14.txt").unwrap();
+    let s = std::fs::read_to_string("input/2021/day5.txt").unwrap();
     let mut start = Instant::now();
-    let mut input = aoc14::input_generator(&s);
+    let mut input = aoc5::input_generator(&s);
     let mut clone = input.clone();
     println!("    Generator in {}", (Instant::now() - start).pretty());
     start = Instant::now();
-    let sol1 = aoc14::solve_part1(&mut input);
+    let sol1 = aoc5::solve_part1(&mut input);
     println!("    Part1 in {}\t=> {}",  (Instant::now() - start).pretty(), sol1);
     start = Instant::now();
-    let sol2 = aoc14::solve_part2(&mut clone);
+    let sol2 = aoc5::solve_part2(&mut clone);
     println!("    Part2 in {}\t=> {}",  (Instant::now() - start).pretty(), sol2);
 }
