@@ -1,5 +1,5 @@
 use criterion::{Criterion, criterion_group};
-use aoc2021::aoc2021::{aoc1, aoc2, aoc3, aoc4, aoc5, aoc6, aoc7, aoc9, aoc8, aoc10, aoc11, aoc12, aoc13};
+use aoc2021::aoc2021::{aoc1, aoc2, aoc3, aoc4, aoc5, aoc6, aoc7, aoc9, aoc8, aoc10, aoc11, aoc12, aoc13, aoc14};
 
 
 pub fn day1(c: &mut Criterion) {
@@ -312,6 +312,28 @@ pub fn day13(c: &mut Criterion) {
     });
 }
 
+pub fn day14(c: &mut Criterion) {
+    c.bench_function("aoc2021_day14_gen",|b| {
+        b.iter_batched(|| {
+            std::fs::read_to_string("input/2021/day14.txt").unwrap()
+        }, |s| aoc14::input_generator(&s), criterion::BatchSize::SmallInput)
+    });
+
+    c.bench_function("aoc2021_day14_solve1",|b| {
+        b.iter_batched(|| {
+            let s = std::fs::read_to_string("input/2021/day14.txt").unwrap();
+            aoc14::input_generator(&s)
+        }, |mut s| aoc14::solve_part1(&mut s), criterion::BatchSize::SmallInput)
+    });
+
+    c.bench_function("aoc2021_day14_solve2",|b| {
+        b.iter_batched(|| {
+            let s = std::fs::read_to_string("input/2021/day14.txt").unwrap();
+            aoc14::input_generator(&s)
+        }, |mut s| aoc14::solve_part2(&mut s), criterion::BatchSize::SmallInput)
+    });
+}
+
 criterion_group!( aoc2021,  day1,
                             day2,
                             day3,
@@ -324,4 +346,5 @@ criterion_group!( aoc2021,  day1,
                             day10,
                             day11,
                             day12,
-                            day13);
+                            day13,
+                            day14);
