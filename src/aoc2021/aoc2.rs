@@ -12,13 +12,13 @@ pub fn input_generator(input: &str) -> Vec<Direction> {
     input
         .lines()
         .map(|l| {
-            let mut direction = l.trim().split(' ');
-            let dir = direction.next().unwrap();
-            let amount = u32::from_str(direction.next().unwrap()).unwrap();
+            let s = l.trim();
+            let dir = s.chars().next().unwrap();
+            let amount = s.chars().rev().next().unwrap() as u32 -48;
             match dir {
-                "forward" => Direction::FORWARD(amount),
-                "down" => Direction::DOWN(amount),
-                "up" => Direction::UP(amount),
+                'f' => Direction::FORWARD(amount),
+                'd' => Direction::DOWN(amount),
+                'u' => Direction::UP(amount),
                 _ => Direction::FORWARD(0),
             }
         }).collect()
