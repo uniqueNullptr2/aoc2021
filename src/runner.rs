@@ -164,7 +164,8 @@ pub enum Parts {
 }
 
 
-
+#[allow(unused_mut)]
+#[allow(clippy::unnecessary_mut_passed)]
 pub fn default_fn() {
     let s = std::fs::read_to_string("input/2021/day14.txt").unwrap();
     let mut start = Instant::now();

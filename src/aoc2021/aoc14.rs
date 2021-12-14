@@ -9,11 +9,11 @@ pub fn input_generator(input: &str) -> (String,[[usize; 26]; 26]) {
     let s = lines.next().unwrap().trim().to_owned();
     lines.next().unwrap();
     for line in lines {
-        let mut split = line.split(" -> ");
-        let mut cc =split.next().unwrap().trim().chars();
+        let mut cc =line.trim().chars();
         let a = cc.next().unwrap() as usize -65;
         let b = cc.next().unwrap() as usize -65;
-        map[a][b] = split.next().unwrap().trim().chars().next().unwrap() as usize - 65;
+        let mut ccc = cc.rev();
+        map[a][b] = ccc.next().unwrap() as usize - 65;
     }
     (s, map)
 }

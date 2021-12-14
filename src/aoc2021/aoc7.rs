@@ -8,23 +8,25 @@ pub fn input_generator(input: &str) -> Vec<usize> {
 }
 
 pub fn solve_part1(vec: &[usize]) -> usize {
-    let mut i = 0;
-    let mut last = 0;
+    let mut l = 0;
+    let mut r = *vec.iter().max().unwrap();
     loop {
-        let t: usize = vec
-            .iter()
-            .map(|n| diff(*n,i))
-            .sum();
-        if i != 0 && t > last {
-            break;
+        let a = l + (r-l)/2;
+        let b = a-1;
+        let c = a+1;
+
+        let aa: usize = vec.iter().map(|n| diff(*n,a)).sum();
+        let bb: usize = vec.iter().map(|n| diff(*n,b)).sum();
+        let cc: usize = vec.iter().map(|n| diff(*n,c)).sum();
+        if aa < bb && aa < cc {
+            return aa;
+        } else if bb < aa {
+            r = a;
         } else {
-            last = t;
-            i += 1;
+            l = a;
         }
     }
-    last
 }
-
 
 fn find_mean(vec: &[usize]) -> (usize, usize, usize) {
     let c = (vec.iter().sum::<usize>() as f64 / vec.len() as f64).round() as usize;

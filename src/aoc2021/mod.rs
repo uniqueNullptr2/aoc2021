@@ -61,7 +61,7 @@ impl AocRunner for AocRunner2021 {
                         |input| aoc3::solve_part2(input)))
                 },
                 4 => {
-                    Some(self.run_day("AOC 2021 Day04", &s,
+                    Some(self.run_day_mut("AOC 2021 Day04", &s,
                         aoc4::input_generator,
                         aoc4::solve_part1,
                         aoc4::solve_part2))
@@ -81,8 +81,8 @@ impl AocRunner for AocRunner2021 {
                 7 => {
                     Some(self.run_day("AOC 2021 Day07", &s,
                         aoc7::input_generator,
-                        |input| aoc7::solve_part1(&input),
-                        |input| aoc7::solve_part2(&input)))
+                        |input| aoc7::solve_part1(input),
+                        |input| aoc7::solve_part2(input)))
                 },
                 8 => {
                     Some(self.run_day("AOC 2021 Day08", &s,
