@@ -27,7 +27,6 @@ pub fn solve_part1(vec: &[usize]) -> usize {
 
 
 fn find_mean(vec: &[usize]) -> (usize, usize, usize) {
-    println!("mean: {}", vec.iter().sum::<usize>() as f64 / vec.len() as f64);
     let c = (vec.iter().sum::<usize>() as f64 / vec.len() as f64).round() as usize;
     (c-1, c, c+1)
 }
