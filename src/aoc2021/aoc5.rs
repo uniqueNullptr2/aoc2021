@@ -1,3 +1,4 @@
+#![allow(dead_code, unused_variables, clippy::let_and_return)]
 use std::collections::HashSet;
 use std::fmt::Display;
 use std::str::FromStr;

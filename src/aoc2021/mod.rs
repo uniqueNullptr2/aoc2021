@@ -15,6 +15,7 @@ pub mod aoc12;
 pub mod aoc13;
 pub mod aoc14;
 pub mod aoc15;
+pub mod aoc16;
 
 
 pub struct AocRunner2021 {
@@ -132,6 +133,12 @@ impl AocRunner for AocRunner2021 {
                         aoc15::input_generator,
                         aoc15::solve_part1,
                         aoc15::solve_part2))
+                },
+                16 => {
+                    Some(self.run_day("AOC 2021 Day16", &s,
+                        aoc16::input_generator,
+                        aoc16::solve_part1,
+                        aoc16::solve_part2))
                 },
                 _ => None
             }
