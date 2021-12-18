@@ -1,5 +1,5 @@
 use std::{time::{Instant, Duration}, fmt::Display};
-use crate::aoc2021::{aoc17};
+use crate::aoc2021::{aoc18};
 
 
 pub struct AocResult {
@@ -179,15 +179,15 @@ pub fn default_fn() {
     // let sol2 = aoc5::solve_part2(&mut clone);
     // println!("    Part2 in {}\t=> {}",  (Instant::now() - start).pretty(), sol2);
 
-    let s = std::fs::read_to_string("input/2021/day17.txt").unwrap();
+    let s = std::fs::read_to_string("input/2021/day18.txt").unwrap();
     let mut start = Instant::now();
-    let mut input = aoc17::input_generator(&s);
+    let mut input = aoc18::input_generator(&s);
     let mut clone = input.clone();
     println!("    Generator in {}", (Instant::now() - start).pretty());
     start = Instant::now();
-    let sol1 = aoc17::solve_part1(&mut input);
+    let sol1 = aoc18::solve_part1(&mut input);
     println!("    Part1 in {}\t=> {}",  (Instant::now() - start).pretty(), sol1);
     start = Instant::now();
-    let sol2 = aoc17::solve_part2(&mut clone);
+    let sol2 = aoc18::solve_part2(&mut clone);
     println!("    Part2 in {}\t=> {}",  (Instant::now() - start).pretty(), sol2);
 }

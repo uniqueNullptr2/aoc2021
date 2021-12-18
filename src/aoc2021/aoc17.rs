@@ -1,35 +1,5 @@
 use std::str::FromStr;
 
-pub enum TargetResult {
-    Calculating,
-    Hit,
-    OvershotX,
-    OvershotY,
-    UndershotX,
-}
-pub struct Probe {
-    x: i32,
-    y: i32,
-    dx: i32,
-    dy: i32
-}
-impl Probe {
-    pub fn new(dx: i32, dy: i32) -> Self {
-        Self{dx, dy, x: 0, y: 0}
-    }
-
-    pub fn step(&mut self) {
-        self.x += self.dx;
-        self.y += self.dy;
-        if self.dx > 0 {
-            self.dx -= 1;
-        } else if self.dx < 0 {
-            self.dx += 1;
-        }
-        self.dy -= 1;
-    }
-}
-
 #[derive(Clone,Copy)]
 pub struct Target {
     x1: i32,
@@ -42,17 +12,26 @@ impl Target {
     pub fn new(x1: i32, y1: i32, x2: i32, y2: i32) -> Self {
         Self{x1,x2,y1,y2}
     }
-    pub fn contains_probe(&self, p: &Probe) -> TargetResult {
-        if p.dx == 0 && p.x < self.x1 {
-            TargetResult::UndershotX
-        } else if p.y > self.y2  {
-            TargetResult::OvershotY
-        } else if p.x > self.x2  {
-            TargetResult::OvershotX
-        } else if p.x >= self.x1 && p.x <= self.x2 && p.y >= self.y1 && p.y <= self.y2 {
-            TargetResult::Hit
-        } else {
-            TargetResult::Calculating
+    pub fn hit(&self, dx: i32, dy: i32) -> bool {
+        let mut ddx = dx;
+        let mut ddy = dy;
+        let mut x = 0;
+        let mut y = 0;
+        loop {
+            if x > self.x2 {
+                return false;
+            } else if y < self.y2 {
+                return false
+            } else if x >= self.x1 && y <= self.y1 {
+                // println!("{},{}", dx, dy);
+                return true;
+            }
+            if ddx > 0 {
+                x += ddx;
+            }
+            y += ddy;
+            ddy -= 1;
+            ddx -= 1;
         }
     }
 }
@@ -73,19 +52,92 @@ pub fn input_generator(input: &str) -> Target {
 
     let xx1 = x1.min(x2);
     let xx2 = x1.max(x2);
-    let yy1 = y1.min(y2);
-    let yy2 = y1.max(y2);
-    println!("{},{},{},{}", xx1, xx2, yy1, yy2);
+    let yy1 = y1.max(y2);
+    let yy2 = y1.min(y2);
     Target::new(xx1,yy1,xx2,yy2)
 }
 
-pub fn solve_part1(input: &Target) -> u64 {
-    
-    0
+pub fn solve_part1(input: &Target) -> i32 {
+    let mut max = 0;
+    let mut dy = 0;
+    for _ in 0..input.y2.abs() {
+        let mut y = 0;
+        let mut ddy = dy;
+        let mut tmpmax = 0;
+        loop {
+            y += ddy;
+            ddy -= 1;
+            if y > tmpmax {
+                tmpmax = y;
+            }
+            if y < input.y2 {
+                break;
+            } else if y <= input.y1 {
+                break;
+            }
+        }
+
+        max = tmpmax;
+        dy += 1;
+    }
+    max
 }
 
+fn find_all_y(input: &Target) -> Vec<i32> {
+    let mut dy = -1;
+    let mut v = vec!();
+    for _ in 0..input.y2.abs() {
+        let mut y = 0;
+        let mut ddy = dy;
+        loop {
+            y += ddy;
+            ddy -= 1;
+            if y < input.y2 {
+                break;
+            } else if y <= input.y1 {
+                v.push(dy);
+                v.push(dy.abs() -1);
+                break;
+            }
+        }
+        dy -= 1;
+    }
+    // println!("{:?}", v);
+    v
+}
 
-
-pub fn solve_part2(_input: &Target) -> u64 {
-    0
+fn find_all_x(input: &Target) -> Vec<i32> {
+    let mut v = vec!();
+    let mut dx = 0;
+    for _ in 0..=input.x2 {
+        let mut x = 0;
+        let mut ddx = dx;
+        loop {
+            x += ddx;
+            ddx -= 1;
+            if x > input.x2 {
+                break;
+            } else if x >= input.x1 {
+                v.push(dx);
+                break;
+            }else if ddx <= 0 {
+                break;
+            }
+        }
+        dx += 1;
+    }
+    v
+}
+pub fn solve_part2(input: &Target) -> usize {
+    let dxs = find_all_x(input);
+    let dys = find_all_y(input);
+    let mut c = 0;
+    for x in dxs {
+        for y in &dys {
+            if input.hit(x,*y) {
+                c += 1
+            }
+        }
+    }
+    c
 }
