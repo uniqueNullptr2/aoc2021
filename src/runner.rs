@@ -1,5 +1,5 @@
 use std::{time::{Instant, Duration}, fmt::Display};
-use crate::aoc2021::{aoc18};
+use crate::aoc2021::{aoc19};
 
 
 pub struct AocResult {
@@ -35,8 +35,8 @@ impl AocResult {
         }
     }
     pub fn print(&self) {
-        println!("{}\nGenerator in {}\n\tPart 1 in {}\n\t\t==> {}\n\tPart 2 in {}\n\t\t==> {}\n====> {}", 
-            self.name, 
+        println!("{}\nGenerator in {}\n\tPart 1 in {}\n\t\t==> {}\n\tPart 2 in {}\n\t\t==> {}\n====> {}",
+            self.name,
             dur_string(&self.gen_time),
             dur_string(&self.p1_time),
             self.e1,
@@ -179,15 +179,15 @@ pub fn default_fn() {
     // let sol2 = aoc5::solve_part2(&mut clone);
     // println!("    Part2 in {}\t=> {}",  (Instant::now() - start).pretty(), sol2);
 
-    let s = std::fs::read_to_string("input/2021/day18.txt").unwrap();
+    let s = std::fs::read_to_string("input/2021/day19.txt").unwrap();
     let mut start = Instant::now();
-    let mut input = aoc18::input_generator(&s);
+    let mut input = aoc19::input_generator(&s);
     let mut clone = input.clone();
     println!("    Generator in {}", (Instant::now() - start).pretty());
     start = Instant::now();
-    let sol1 = aoc18::solve_part1(&mut input);
+    let sol1 = aoc19::solve_part1(&mut input);
     println!("    Part1 in {}\t=> {}",  (Instant::now() - start).pretty(), sol1);
     start = Instant::now();
-    let sol2 = aoc18::solve_part2(&mut clone);
+    let sol2 = aoc19::solve_part2(&mut clone);
     println!("    Part2 in {}\t=> {}",  (Instant::now() - start).pretty(), sol2);
 }
