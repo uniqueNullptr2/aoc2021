@@ -22,6 +22,8 @@ pub mod aoc19;
 
 pub mod aoc21;
 
+pub mod aoc24;
+
 pub struct AocRunner2021 {
     day: usize,
 }
@@ -150,7 +152,7 @@ impl AocRunner for AocRunner2021 {
                         aoc17::solve_part1,
                         aoc17::solve_part2))
                 },
-                17 => {
+                18 => {
                     Some(self.run_day("AOC 2021 Day18", &s,
                         aoc18::input_generator,
                         |input| aoc18::solve_part1(&input),

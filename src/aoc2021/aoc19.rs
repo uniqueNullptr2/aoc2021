@@ -54,14 +54,14 @@ pub fn input_generator(input: &str) -> Vec<Vec<(i32,i32,i32)>> {
 
 
 fn unify_probes(vec: &mut Vec<(i32,i32,i32)>, other: &Vec<(i32,i32,i32)>) -> bool {
-    let mut probes: Vec<[(i32,i32,i32);24]> = other.iter().map(|(a,b,c)| transformations(*a, *b, *c)).collect();
+    let  probes: Vec<[(i32,i32,i32);24]> = other.iter().map(|(a,b,c)| transformations(*a, *b, *c)).collect();
     let mut set = HashSet::new();
     for p in vec.iter() {
         set.insert(*p);
     }
 
     let mut e = 0;
-    let mut flag = false;
+    let  flag = false;
     for i in 0..24 {
         let mut c = 0;
         for ps in &probes{
@@ -105,6 +105,6 @@ pub fn solve_part1(input: &[Vec<(i32,i32,i32)>]) -> usize {
 
 
 
-pub fn solve_part2(input: &[Vec<(i32,i32,i32)>]) -> i32 {
+pub fn solve_part2(_input: &[Vec<(i32,i32,i32)>]) -> i32 {
     todo!()
 }

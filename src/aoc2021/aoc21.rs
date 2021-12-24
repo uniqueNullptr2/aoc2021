@@ -1,4 +1,4 @@
-
+#![allow(unused)]
 
 trait Die {
     fn roll(&mut self) -> usize;
