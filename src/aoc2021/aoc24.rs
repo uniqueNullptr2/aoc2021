@@ -128,14 +128,14 @@ pub fn solve_part1(input: &[Instruction]) -> i64 {
     let mut c:i64 = 99999999999999;
     let mut m:i64 = 10000000000000;
     // let mut cc = 0;
-    loop {
+    // loop {
     // for _ in 0..9 {
         if let Some(s) = make_input(c) {
             let mut alu = ALU::new(&s);
             match alu.execute_all(input) {
                 Ok(0) => return c,
                 Ok(x)=> {
-                    println!("{} {} {}", x, c, c-x);
+                    println!("{}", x);
                     c -= x;
                 },
                 _ => ()
@@ -146,8 +146,8 @@ pub fn solve_part1(input: &[Instruction]) -> i64 {
             //     cc = 0;
             // }
         }
-        c -= 1;
-    }
+    //     c -= 1;
+    // }
     1337
 }
 
@@ -158,4 +158,27 @@ fn make_input(n: i64) -> Option<String> {
 
 pub fn solve_part2(_input: &[Instruction]) -> usize {
     0
+}
+
+fn solve(v: [i64;9]) -> i64 {
+    let mut x = 0;
+    let mut w = 0;
+    let mut z = 0;
+    let mut y = 0;
+
+    w = v[0];
+    z = w+7;
+    w = v[1];
+    z *= 26;
+    y = w+8;
+    z *= y;
+
+    w = v[2];
+    x = 1+z;
+    x = x%26;
+    x += 13;
+    
+
+
+    z
 }
