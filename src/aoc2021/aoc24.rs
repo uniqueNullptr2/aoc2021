@@ -1,6 +1,137 @@
-use std::{str::Lines};
+use std::{sync::{atomic::{AtomicBool, Ordering}, Arc}, thread, fmt::Display};
 
 use itertools::Itertools;
+
+#[derive(Clone)]
+struct Digit{
+    d: [i64;14],
+    dset: [SetState;14],
+    input: Vec<Instruction>,
+}
+
+#[derive(Clone, Copy)]
+enum SetState {
+    Set,
+    Unset
+}
+
+impl SetState {
+    fn val(&self) -> u8 {
+        match self {
+            SetState::Set => 1,
+            SetState::Unset => 0,
+        }
+    }
+}
+
+impl Digit {
+    fn new(d: [i64;14], input: Vec<Instruction>) -> Self {
+        Self{d, dset: [SetState::Unset; 14],input}
+    }
+    fn tryout(&mut self, i: usize) {
+        let g = self.d[i];
+        for f in 0..9 {
+            self.d[i] = f;
+            let mut alu = ALU::new(self.d);
+            if let Some(r) = alu.execute_all(&self.input).ok() {
+                println!("{} -> {}", f, r);
+            }
+        }
+    }
+    fn set(&mut self, i: usize) {
+        let mut min = i64::max_value();
+        let mut mc = 0;
+        let mut e = 0;
+        for f in 0..9 {
+            self.d[i] = f;
+            let mut alu = ALU::new(self.d);
+            if let Some(r) = alu.execute_all(&self.input).ok() {
+                if r < min {
+                    min = r;
+                    mc = 0;
+                    e = f;
+                } else if r == min {
+                    mc += 1;
+                }
+            }
+        }
+        if mc == 0 {
+            self.dset[i] = SetState::Set;
+            self.d[i] = e;
+        } else {
+            self.d[i] = 8;
+        }
+    }
+
+    fn set_all(&mut self) {
+        let mut i = 14;
+        while i > 0 {
+            self.set(i-1);
+            i -= 1
+        }
+    }
+    fn increment(&mut self) -> bool {
+        let mut i = 13;
+        loop {
+            match self.dset[i] {
+                SetState::Set if i == 0 => {
+                    return false;
+                },
+                SetState::Set => {
+                    i -= 1;
+                    continue;
+                },
+                _ => ()
+            }
+            self.d[i] -= 1;
+            if self.d[i] < 0 {
+                self.d[i] = 8;
+                i -= 1;
+            } else {
+                break;
+            }
+        }
+        true
+    }
+    fn calc(&self) -> Option<i64> {
+        let mut alu = ALU::new(self.d);
+        alu.execute_all(&self.input).ok()
+    }
+}
+
+impl Display for Digit {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}{}{}{}{}{}{}{}{}{}{}{}{}{}\n{}{}{}{}{}{}{}{}{}{}{}{}{}{}",
+            self.d[0]+1,
+            self.d[1]+1,
+            self.d[2]+1,
+            self.d[3]+1,
+            self.d[4]+1,
+            self.d[5]+1,
+            self.d[6]+1,
+            self.d[7]+1,
+            self.d[8]+1,
+            self.d[9]+1,
+            self.d[10]+1,
+            self.d[11]+1,
+            self.d[12]+1,
+            self.d[13]+1,
+            self.dset[0].val(),
+            self.dset[1].val(),
+            self.dset[2].val(),
+            self.dset[3].val(),
+            self.dset[4].val(),
+            self.dset[5].val(),
+            self.dset[6].val(),
+            self.dset[7].val(),
+            self.dset[8].val(),
+            self.dset[9].val(),
+            self.dset[10].val(),
+            self.dset[11].val(),
+            self.dset[12].val(),
+            self.dset[13].val(),)
+    }
+}
 #[derive(Clone, Copy)]
 pub enum Instruction {
     Inp(Reference),
@@ -48,17 +179,18 @@ impl Reference {
         }
     }
 }
-pub struct ALU<'a> {
+pub struct ALU {
     w: i64,
     x: i64,
     y: i64,
     z: i64,
-    buf: Lines<'a>
+    buf: [i64;14],
+    index: usize,
 }
 
-impl<'a> ALU<'a> {
-    fn new(input: &'a str) -> Self {
-        Self{w: 0, x: 0, y: 0, z: 0, buf: input.lines()}
+impl ALU {
+    fn new(buf: [i64;14]) -> Self {
+        Self{w: 0, x: 0, y: 0, z: 0, buf, index: 0}
     }
 
     fn getn(&self, r: &Reference) -> i64{
@@ -83,7 +215,8 @@ impl<'a> ALU<'a> {
     fn execute_instr(&mut self, instr: &Instruction) -> Result<()>{
         match instr {
             Instruction::Inp(r) => {
-                let i = i64::from_str_radix(self.buf.next().unwrap().trim(), 10).unwrap();
+                let i = self.buf[self.index]+1;
+                self.index += 1;
                 self.setn(r, i)?
             },
             Instruction::Add(a, b) => {
@@ -125,60 +258,32 @@ pub fn input_generator(input: &str) -> Vec<Instruction> {
 }
 
 pub fn solve_part1(input: &[Instruction]) -> i64 {
-    let mut c:i64 = 99999999999999;
-    let mut m:i64 = 10000000000000;
-    // let mut cc = 0;
+    let mut d = Digit::new([8,8,8,8,8,8,8,8,8,8,8,8,8,8],input.to_owned());
+    println!("{}", d);
+    d.tryout(1);
+    // d.set_all();
     // loop {
-    // for _ in 0..9 {
-        if let Some(s) = make_input(c) {
-            let mut alu = ALU::new(&s);
-            match alu.execute_all(input) {
-                Ok(0) => return c,
-                Ok(x)=> {
-                    println!("{}", x);
-                    c -= x;
-                },
-                _ => ()
-            }
-            // cc += 1;
-            // if cc == 100000 {
-            //     println!("{}", c);
-            //     cc = 0;
-            // }
-        }
-    //     c -= 1;
+    //     // println!("{}\n", d);
+
+    //     match d.calc() {
+    //         Some(0) => {
+    //             println!("{}", d);
+    //             return 0;
+    //         },
+    //         Some(x) => {
+    //             // println!("{} -> {}", d, x)
+    //         }
+    //         None => ()
+    //     }
+    //     if !d.increment() {
+    //         break;
+    //     }
     // }
     1337
 }
 
 
-fn make_input(n: i64) -> Option<String> {
-    Some(n.to_string().chars().join("\n")).filter(|s| !s.contains('0'))
-}
 
 pub fn solve_part2(_input: &[Instruction]) -> usize {
     0
-}
-
-fn solve(v: [i64;9]) -> i64 {
-    let mut x = 0;
-    let mut w = 0;
-    let mut z = 0;
-    let mut y = 0;
-
-    w = v[0];
-    z = w+7;
-    w = v[1];
-    z *= 26;
-    y = w+8;
-    z *= y;
-
-    w = v[2];
-    x = 1+z;
-    x = x%26;
-    x += 13;
-    
-
-
-    z
 }
